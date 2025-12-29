@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { format, parseISO } from "date-fns";
 import Image from "next/image";
 import {
@@ -115,22 +115,72 @@ const CustomTooltip = ({ active, payload, label }) => {
 export default function Home() {
   const [startDate, setStartDate] = useState(reportData.period.start);
   const [endDate, setEndDate] = useState(reportData.period.end);
+  const [analyticsData, setAnalyticsData] = useState(reportData);
+  const [loading, setLoading] = useState(false);
   const reportRef = useRef(null);
+
+  // Fetch analytics data from API
+  useEffect(() => {
+    const fetchAnalytics = async () => {
+      if (!startDate || !endDate) return;
+
+      setLoading(true);
+      try {
+        const url = `/api/analytics/store?startDate=${startDate}&endDate=${endDate}`;
+        const response = await fetch(url);
+        const result = await response.json();
+
+        if (result.data) {
+          // Merge API data with default structure
+          setAnalyticsData({
+            period: { start: startDate, end: endDate },
+            metrics: result.data.metrics || reportData.metrics,
+            topPages: result.data.topPages || reportData.topPages,
+            trafficSources:
+              result.data.trafficSources || reportData.trafficSources,
+            countries: result.data.countries || reportData.countries,
+            devices: result.data.devices || reportData.devices,
+            operatingSystems:
+              result.data.operatingSystems || reportData.operatingSystems,
+            blogPost: reportData.blogPost, // Keep static blog post data
+          });
+        } else if (result.message) {
+          // No data available, keep default data
+          console.log(result.message);
+        }
+      } catch (error) {
+        console.error("Error fetching analytics:", error);
+        // Keep default data on error
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchAnalytics();
+  }, [startDate, endDate]);
 
   const handleStartDateChange = (e) => {
     const newStartDate = e.target.value;
-    setStartDate(newStartDate);
-    // Ensure end date is not before start date
-    if (newStartDate > endDate) {
-      setEndDate(newStartDate);
+    if (newStartDate) {
+      setStartDate(newStartDate);
+      // Ensure end date is not before start date
+      if (newStartDate > endDate) {
+        setEndDate(newStartDate);
+      }
     }
   };
 
   const handleEndDateChange = (e) => {
     const newEndDate = e.target.value;
-    // Ensure end date is not before start date
-    if (newEndDate >= startDate) {
-      setEndDate(newEndDate);
+    if (newEndDate) {
+      // Ensure end date is not before start date
+      if (newEndDate >= startDate) {
+        setEndDate(newEndDate);
+      } else {
+        // If end date is before start date, update start date instead
+        setStartDate(newEndDate);
+        setEndDate(newEndDate);
+      }
     }
   };
 
@@ -329,6 +379,9 @@ export default function Home() {
                 {format(parseISO(startDate), "MMM dd, yyyy")} –{" "}
                 {format(parseISO(endDate), "MMM dd, yyyy")}
               </span>
+              {loading && (
+                <span className="ml-3 text-sm text-gray-500">(Loading...)</span>
+              )}
             </p>
           </div>
         </div>
@@ -338,19 +391,19 @@ export default function Home() {
           {[
             {
               label: "Total Visitors",
-              value: reportData.metrics.totalVisitors,
+              value: analyticsData.metrics.totalVisitors,
             },
             {
               label: "Total Page Views",
-              value: reportData.metrics.totalPageViews,
+              value: analyticsData.metrics.totalPageViews,
             },
             {
               label: "Resumes Received",
-              value: reportData.metrics.resumesReceived,
+              value: analyticsData.metrics.resumesReceived,
             },
             {
               label: "Conversion Rate",
-              value: `${reportData.metrics.conversionRate}%`,
+              value: `${analyticsData.metrics.conversionRate}%`,
             },
           ].map((metric, index) => (
             <div
@@ -378,7 +431,7 @@ export default function Home() {
           </div>
           <ResponsiveContainer width="100%" height={350}>
             <BarChart
-              data={reportData.topPages}
+              data={analyticsData.topPages}
               margin={{ top: 20, right: 30, left: 20, bottom: 60 }}
             >
               <CartesianGrid
@@ -424,7 +477,7 @@ export default function Home() {
             <ResponsiveContainer width="100%" height={350}>
               <PieChart>
                 <Pie
-                  data={reportData.trafficSources}
+                  data={analyticsData.trafficSources}
                   cx="50%"
                   cy="50%"
                   labelLine={false}
@@ -448,7 +501,7 @@ export default function Home() {
               </PieChart>
             </ResponsiveContainer>
             <div className="mt-6 pt-4 border-t border-black/10 space-y-2">
-              {reportData.trafficSources.map((source, index) => (
+              {analyticsData.trafficSources.map((source, index) => (
                 <div
                   key={index}
                   className="flex justify-between items-center py-1"
@@ -478,7 +531,7 @@ export default function Home() {
             </div>
             <ResponsiveContainer width="100%" height={350}>
               <BarChart
-                data={reportData.countries}
+                data={analyticsData.countries}
                 layout="vertical"
                 margin={{ top: 20, right: 30, left: 20, bottom: 20 }}
               >
@@ -533,7 +586,7 @@ export default function Home() {
             <ResponsiveContainer width="100%" height={300}>
               <PieChart>
                 <Pie
-                  data={reportData.devices}
+                  data={analyticsData.devices}
                   cx="50%"
                   cy="50%"
                   labelLine={false}
@@ -555,7 +608,7 @@ export default function Home() {
               </PieChart>
             </ResponsiveContainer>
             <div className="mt-6 pt-4 border-t border-black/10 space-y-3">
-              {reportData.devices.map((device, index) => (
+              {analyticsData.devices.map((device, index) => (
                 <div
                   key={index}
                   className="flex justify-between items-center py-2 border-b border-black/5 last:border-0"
@@ -590,7 +643,7 @@ export default function Home() {
             </div>
             <ResponsiveContainer width="100%" height={300}>
               <BarChart
-                data={reportData.operatingSystems}
+                data={analyticsData.operatingSystems}
                 margin={{ top: 20, right: 30, left: 20, bottom: 20 }}
               >
                 <CartesianGrid
@@ -633,12 +686,12 @@ export default function Home() {
           </div>
           <div className="glass border border-black/20 p-6 rounded-xl backdrop-blur-md">
             <h3 className="text-base font-bold text-black mb-3 leading-snug">
-              {reportData.blogPost.title}
+              {analyticsData.blogPost.title}
             </h3>
             <p className="text-sm text-gray-700 mb-5 leading-relaxed">
               This blog post continues to be a featured asset with{" "}
               <span className="font-bold text-black">
-                {reportData.blogPost.lifetimeViews.toLocaleString()} lifetime
+                {analyticsData.blogPost.lifetimeViews.toLocaleString()} lifetime
                 views
               </span>
               , serving as a critical entry point for high-net-worth individuals
@@ -649,7 +702,7 @@ export default function Home() {
                 Lifetime Views:
               </span>
               <span className="text-3xl font-bold text-black">
-                {reportData.blogPost.lifetimeViews.toLocaleString()}
+                {analyticsData.blogPost.lifetimeViews.toLocaleString()}
               </span>
             </div>
           </div>

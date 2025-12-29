@@ -11,28 +11,45 @@ NEXT_PUBLIC_APP_URL=http://localhost:3000
 # For production, update to your Vercel deployment URL:
 # NEXT_PUBLIC_APP_URL=https://your-domain.vercel.app
 
-# Optional: Webhook secret for authentication
-WEBHOOK_SECRET=
+# REQUIRED: Webhook signature verification secret
+# This will be provided when you create the webhook in Vercel Dashboard
+# Go to: Vercel Dashboard → Your Project → Settings → Webhooks → Create Webhook
+WEBHOOK_SECRET=your_webhook_secret_here
 
 # Optional: Vercel Analytics API key
 VERCEL_ANALYTICS_API_KEY=
 ```
+
+### Getting Your Webhook Secret
+
+1. Go to your **Vercel Dashboard**
+2. Navigate to your project
+3. Go to **Settings** → **Webhooks** (or **Analytics** → **Drain Settings**)
+4. Click **Add Webhook** or **Create Webhook**
+5. Enter your destination URL: `https://your-domain.vercel.app/api/analytics/webhook`
+6. Vercel will generate and display a **Secret** - copy this value
+7. Add it to your `.env.local` file as `WEBHOOK_SECRET`
+
+**Important:** The signature verification secret is required for production to ensure webhook requests are authentic and haven't been tampered with.
 
 ## Webhook URL Configuration
 
 The webhook URL is automatically constructed from your `NEXT_PUBLIC_APP_URL` environment variable:
 
 ### Development URL:
+
 ```
 http://localhost:3000/api/analytics/webhook
 ```
 
 ### Production URL (after deployment):
+
 ```
 https://your-domain.vercel.app/api/analytics/webhook
 ```
 
 You can check your configured webhook URL by visiting:
+
 ```
 GET /api/analytics/webhook
 ```
