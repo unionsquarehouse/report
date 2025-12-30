@@ -1204,7 +1204,7 @@ export default function Home() {
               {/* Export Button */}
               <button
                 onClick={handleExportPDF}
-                className="px-5 py-2.5 bg-black/80 backdrop-blur-md text-white rounded-xl hover:bg-black/90 transition-all flex items-center gap-2 font-semibold text-sm shadow-2xl"
+                className="px-5 py-2.5 bg-black/80 cursor-pointer backdrop-blur-md text-white rounded-xl hover:bg-black/90 transition-all flex items-center gap-2 font-semibold text-sm shadow-2xl"
               >
                 Export PDF
               </button>
