@@ -13,7 +13,8 @@ const geistMono = Geist_Mono({
 
 export const metadata = {
   title: "USH Monthly Report - Performance Dashboard",
-  description: "Union Square House Performance & Branding Report Dashboard - View comprehensive analytics, traffic sources, top performing pages, and key insights.",
+  description:
+    "Union Square House Performance & Branding Report Dashboard - View comprehensive analytics, traffic sources, top performing pages, and key insights.",
   themeColor: "#ffffff",
   viewport: {
     width: "device-width",
@@ -22,14 +23,15 @@ export const metadata = {
   },
   openGraph: {
     title: "USH Monthly Report - Performance Dashboard",
-    description: "Union Square House Performance & Branding Report Dashboard - View comprehensive analytics, traffic sources, top performing pages, and key insights.",
+    description:
+      "Union Square House Performance & Branding Report Dashboard - View comprehensive analytics, traffic sources, top performing pages, and key insights.",
     url: "https://monthly-report.vercel.app",
     siteName: "Union Square House",
     images: [
       {
-        url: "/ush-logo.jpeg",
-        width: 1200,
-        height: 630,
+        url: "/icon-512x512.png",
+        width: 512,
+        height: 512,
         alt: "Union Square House Performance Dashboard",
       },
     ],
@@ -39,17 +41,18 @@ export const metadata = {
   twitter: {
     card: "summary_large_image",
     title: "USH Monthly Report - Performance Dashboard",
-    description: "Union Square House Performance & Branding Report Dashboard - View comprehensive analytics and insights.",
-    images: ["/ush-logo.jpeg"],
+    description:
+      "Union Square House Performance & Branding Report Dashboard - View comprehensive analytics and insights.",
+    images: ["/icon-512x512.png"],
   },
 };
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="en" style={{ colorScheme: 'light' }}>
+    <html lang="en" style={{ colorScheme: "light" }}>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-        style={{ background: '#ffffff', color: '#171717' }}
+        style={{ background: "#ffffff", color: "#171717" }}
       >
         {children}
       </body>
