@@ -13,12 +13,34 @@ const geistMono = Geist_Mono({
 
 export const metadata = {
   title: "USH Monthly Report - Performance Dashboard",
-  description: "Union Square House Performance & Branding Report Dashboard",
+  description: "Union Square House Performance & Branding Report Dashboard - View comprehensive analytics, traffic sources, top performing pages, and key insights.",
   themeColor: "#ffffff",
   viewport: {
     width: "device-width",
     initialScale: 1,
     colorScheme: "light",
+  },
+  openGraph: {
+    title: "USH Monthly Report - Performance Dashboard",
+    description: "Union Square House Performance & Branding Report Dashboard - View comprehensive analytics, traffic sources, top performing pages, and key insights.",
+    url: "https://monthly-report.vercel.app",
+    siteName: "Union Square House",
+    images: [
+      {
+        url: "/ush-logo.jpeg",
+        width: 1200,
+        height: 630,
+        alt: "Union Square House Performance Dashboard",
+      },
+    ],
+    locale: "en_US",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "USH Monthly Report - Performance Dashboard",
+    description: "Union Square House Performance & Branding Report Dashboard - View comprehensive analytics and insights.",
+    images: ["/ush-logo.jpeg"],
   },
 };
 
