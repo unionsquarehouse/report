@@ -14,13 +14,20 @@ const geistMono = Geist_Mono({
 export const metadata = {
   title: "USH Monthly Report - Performance Dashboard",
   description: "Union Square House Performance & Branding Report Dashboard",
+  themeColor: "#ffffff",
+  viewport: {
+    width: "device-width",
+    initialScale: 1,
+    colorScheme: "light",
+  },
 };
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="en">
+    <html lang="en" style={{ colorScheme: 'light' }}>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        style={{ background: '#ffffff', color: '#171717' }}
       >
         {children}
       </body>

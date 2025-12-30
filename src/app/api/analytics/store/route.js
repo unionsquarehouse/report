@@ -13,20 +13,24 @@ function aggregateAnalytics(events, startDate, endDate) {
     // Normalize dates to start and end of day for proper comparison
     const start = new Date(startDate);
     start.setHours(0, 0, 0, 0);
-    
+
     const end = new Date(endDate);
     end.setHours(23, 59, 59, 999);
-    
+
     filteredEvents = events.filter((event) => {
-      const eventDate = new Date(event.timestamp || event.date || event.receivedAt);
+      const eventDate = new Date(
+        event.timestamp || event.date || event.receivedAt
+      );
       return eventDate >= start && eventDate <= end;
     });
   }
 
   // Aggregate metrics
-  const totalVisitors = new Set(filteredEvents.map((e) => e.data?.ip || e.data?.sessionId || Math.random())).size;
+  const totalVisitors = new Set(
+    filteredEvents.map((e) => e.data?.ip || e.data?.sessionId || Math.random())
+  ).size;
   const totalPageViews = filteredEvents.length;
-  
+
   // Top pages
   const pageViews = {};
   filteredEvents.forEach((event) => {
@@ -106,7 +110,10 @@ function aggregateAnalytics(events, startDate, endDate) {
       totalVisitors,
       totalPageViews,
       resumesReceived: 0, // This would come from a separate source
-      conversionRate: totalVisitors > 0 ? ((totalPageViews / totalVisitors) * 100).toFixed(1) : 0,
+      conversionRate:
+        totalVisitors > 0
+          ? ((totalPageViews / totalVisitors) * 100).toFixed(1)
+          : 0,
     },
     topPages,
     trafficSources,
@@ -119,14 +126,15 @@ function aggregateAnalytics(events, startDate, endDate) {
 export async function POST(request) {
   try {
     const body = await request.json();
-    
+
     // Store the event
     const event = {
       ...body,
       receivedAt: new Date().toISOString(),
-      timestamp: body.timestamp || body.data?.timestamp || new Date().toISOString(),
+      timestamp:
+        body.timestamp || body.data?.timestamp || new Date().toISOString(),
     };
-    
+
     storeAnalyticsEvent(event);
     const analyticsEvents = getAnalyticsEvents();
 
@@ -154,7 +162,7 @@ export async function GET(request) {
     const endDate = searchParams.get("endDate");
 
     const analyticsEvents = getAnalyticsEvents();
-    
+
     // Aggregate data with date filtering
     const data = aggregateAnalytics(analyticsEvents, startDate, endDate);
 
@@ -173,7 +181,8 @@ export async function GET(request) {
       {
         data,
         eventsCount: analyticsEvents.length,
-        period: startDate && endDate ? { start: startDate, end: endDate } : null,
+        period:
+          startDate && endDate ? { start: startDate, end: endDate } : null,
       },
       { status: 200 }
     );
@@ -185,4 +194,3 @@ export async function GET(request) {
     );
   }
 }
-
