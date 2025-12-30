@@ -95,41 +95,105 @@ body {
 svg:focus,
 svg:focus-visible,
 svg:active,
+svg *:focus,
+svg *:focus-visible,
+svg *:active,
 .recharts-wrapper:focus,
 .recharts-wrapper:focus-visible,
 .recharts-wrapper:active,
 .recharts-surface:focus,
 .recharts-surface:focus-visible,
-.recharts-surface:active {
-  outline: none !important;
-  border: none !important;
-  box-shadow: none !important;
-}
-
-/* Remove focus ring from all interactive chart elements */
+.recharts-surface:active,
+.recharts-layer:focus,
+.recharts-layer:focus-visible,
+.recharts-layer:active,
 .recharts-active-shape:focus,
 .recharts-active-shape:focus-visible,
 .recharts-tooltip-wrapper:focus,
 .recharts-tooltip-wrapper:focus-visible {
   outline: none !important;
   border: none !important;
+  box-shadow: none !important;
+}
+
+/* Prevent text selection and focus on all chart elements */
+.recharts-wrapper,
+.recharts-wrapper *,
+.recharts-surface,
+.recharts-surface *,
+.recharts-layer,
+.recharts-layer * {
+  -webkit-tap-highlight-color: transparent !important;
+  -webkit-user-select: none !important;
+  -moz-user-select: none !important;
+  -ms-user-select: none !important;
+  user-select: none !important;
+  outline: none !important;
 }
 
 /* Remove tap highlight and focus from chart containers */
+.glass-card svg,
+.glass-card .recharts-wrapper,
+.glass-card .recharts-surface,
+.glass-card .recharts-layer {
+  -webkit-tap-highlight-color: transparent !important;
+  outline: none !important;
+  border: none !important;
+}
+
+.glass-card:focus,
+.glass-card:focus-visible,
+.glass-card:active {
+  outline: none !important;
+}
+
+/* Remove selection box on mobile */
 @media (max-width: 1024px) {
-  .glass-card svg,
-  .glass-card .recharts-wrapper,
-  .glass-card .recharts-surface {
-    -webkit-tap-highlight-color: transparent;
-    outline: none !important;
-    border: none !important;
+  * {
+    -webkit-tap-highlight-color: transparent !important;
   }
   
-  .glass-card:focus,
-  .glass-card:focus-visible,
-  .glass-card:active {
-    outline: none !important;
-    border: 1px solid rgba(255, 255, 255, 0.5) !important;
-    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.1) !important;
+  .glass-card,
+  .glass-card * {
+    -webkit-tap-highlight-color: transparent !important;
+    -webkit-user-select: none !important;
+    -moz-user-select: none !important;
+    -ms-user-select: none !important;
+    user-select: none !important;
   }
+}
+
+/* Prevent selection highlighting globally for charts */
+.recharts-wrapper::selection,
+.recharts-surface::selection,
+.recharts-layer::selection,
+.recharts-wrapper *::selection,
+.recharts-surface *::selection,
+.recharts-layer *::selection,
+svg::selection,
+svg *::selection {
+  background: transparent !important;
+  color: inherit !important;
+}
+
+/* Remove any border or outline that might appear on click */
+.recharts-wrapper,
+.recharts-surface,
+.recharts-layer {
+  border: none !important;
+  outline: none !important;
+  box-shadow: none !important;
+}
+
+/* Prevent any visual feedback on chart interaction */
+.recharts-wrapper:active,
+.recharts-surface:active,
+.recharts-layer:active,
+.recharts-wrapper:focus,
+.recharts-surface:focus,
+.recharts-layer:focus {
+  border: none !important;
+  outline: none !important;
+  box-shadow: none !important;
+  transform: none !important;
 }
