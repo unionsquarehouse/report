@@ -90,3 +90,46 @@ body {
     -webkit-overflow-scrolling: touch;
   }
 }
+
+/* Remove focus outlines from charts and SVG elements */
+svg:focus,
+svg:focus-visible,
+svg:active,
+.recharts-wrapper:focus,
+.recharts-wrapper:focus-visible,
+.recharts-wrapper:active,
+.recharts-surface:focus,
+.recharts-surface:focus-visible,
+.recharts-surface:active {
+  outline: none !important;
+  border: none !important;
+  box-shadow: none !important;
+}
+
+/* Remove focus ring from all interactive chart elements */
+.recharts-active-shape:focus,
+.recharts-active-shape:focus-visible,
+.recharts-tooltip-wrapper:focus,
+.recharts-tooltip-wrapper:focus-visible {
+  outline: none !important;
+  border: none !important;
+}
+
+/* Remove tap highlight and focus from chart containers */
+@media (max-width: 1024px) {
+  .glass-card svg,
+  .glass-card .recharts-wrapper,
+  .glass-card .recharts-surface {
+    -webkit-tap-highlight-color: transparent;
+    outline: none !important;
+    border: none !important;
+  }
+  
+  .glass-card:focus,
+  .glass-card:focus-visible,
+  .glass-card:active {
+    outline: none !important;
+    border: 1px solid rgba(255, 255, 255, 0.5) !important;
+    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.1) !important;
+  }
+}
