@@ -64,3 +64,29 @@ body {
   box-shadow: 0 12px 48px 0 rgba(0, 0, 0, 0.15);
   border-color: rgba(255, 255, 255, 0.6);
 }
+
+/* Mobile App-like Styling - Only for mobile devices */
+@media (max-width: 640px) {
+  /* Larger touch targets for mobile */
+  button, a {
+    min-height: 44px;
+    min-width: 44px;
+  }
+
+  /* Mobile app-like card styling */
+  .glass-card {
+    border-radius: 1.25rem;
+    box-shadow: 0 4px 20px 0 rgba(0, 0, 0, 0.08);
+  }
+
+  /* Better spacing for mobile */
+  body {
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  /* Smooth scrolling for mobile */
+  html {
+    scroll-behavior: smooth;
+    -webkit-overflow-scrolling: touch;
+  }
+}

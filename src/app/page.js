@@ -148,6 +148,17 @@ export default function Home() {
   const [endDate, setEndDate] = useState(reportData.period.end);
   const [analyticsData] = useState(reportData);
   const reportRef = useRef(null);
+  const [isMobile, setIsMobile] = useState(false);
+
+  // Detect mobile screen size
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 640);
+    };
+    checkMobile();
+    window.addEventListener("resize", checkMobile);
+    return () => window.removeEventListener("resize", checkMobile);
+  }, []);
 
   // Load PDF settings from localStorage
   const [pdfSettings, setPdfSettings] = useState(() => {
@@ -1179,32 +1190,32 @@ export default function Home() {
 
       {/* Header with Filters and Export */}
       <div className="glass sticky top-0 z-50 border-b border-white/30 shadow-2xl backdrop-blur-xl">
-        <div className="max-w-7xl mx-auto px-6 sm:px-8 lg:px-10 py-6">
-          <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-6">
-            <div className="flex items-center gap-5">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-10 ">
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 sm:gap-6">
+            <div className="flex items-center gap-3 sm:gap-5">
               <Image
                 src="/ush-logo.jpeg"
                 alt="Union Square House Logo"
                 width={120}
                 height={120}
-                className="object-contain"
+                className="object-contain w-16 h-16 sm:w-24 sm:h-24 lg:w-[120px] lg:h-[120px]"
                 priority
               />
-              <div className="border-l-2 border-gray-300 pl-5">
-                <h1 className="text-2xl font-bold text-black tracking-tight">
+              <div className="border-l-2 border-gray-300 pl-3 sm:pl-5">
+                <h1 className="text-lg sm:text-xl lg:text-2xl font-bold text-black tracking-tight">
                   Performance Dashboard
                 </h1>
-                <p className="text-sm text-gray-600 mt-0.5 font-medium">
+                <p className="text-xs sm:text-sm text-gray-600 mt-0.5 font-medium">
                   Union Square House
                 </p>
               </div>
             </div>
 
-            <div className="flex gap-2">
-              {/* Export Button */}
+            <div className="hidden md:flex gap-2 w-full sm:w-auto">
+              {/* Export Button - Desktop Only */}
               <button
                 onClick={handleExportPDF}
-                className="px-5 py-2.5 bg-black/80 cursor-pointer backdrop-blur-md text-white rounded-xl hover:bg-black/90 transition-all flex items-center gap-2 font-semibold text-sm shadow-2xl"
+                className="px-6 py-3.5 sm:px-5 sm:py-2.5 bg-black/80 cursor-pointer backdrop-blur-md text-white rounded-2xl sm:rounded-xl hover:bg-black/90 active:scale-95 sm:active:scale-100 transition-all flex items-center justify-center gap-2 font-semibold text-sm sm:text-sm shadow-2xl flex-1 sm:flex-initial touch-manipulation"
               >
                 Export PDF
               </button>
@@ -1216,14 +1227,14 @@ export default function Home() {
       {/* Main Report Content */}
       <div
         ref={reportRef}
-        className="max-w-7xl mx-auto px-6 sm:px-8 lg:px-10 py-10 relative z-10"
+        className="max-w-7xl mx-auto px-5 sm:px-6 lg:px-10 py-6 sm:py-8 lg:py-10 pb-24 md:pb-10 relative z-10"
       >
         {/* Report Period */}
-        <div className="mb-12 text-center relative z-10">
-          <div className="inline-block px-8 py-4 glass-card border border-white/50 rounded-3xl shadow-lg hover:shadow-xl transition-shadow">
-            <p className="text-base text-gray-700 font-medium">
+        <div className="mb-10 sm:mb-12 text-center relative z-10">
+          <div className="inline-block px-6 sm:px-6 lg:px-8 py-4 sm:py-4 glass-card border border-white/50 rounded-3xl sm:rounded-3xl shadow-lg sm:hover:shadow-xl transition-shadow">
+            <p className="text-base sm:text-base text-gray-700 font-medium">
               Reporting Period:{" "}
-              <span className="font-bold bg-gradient-to-r from-gray-900 to-gray-700 bg-clip-text text-transparent">
+              <span className="font-bold bg-gradient-to-r from-gray-900 to-gray-700 bg-clip-text text-transparent block sm:inline">
                 {format(parseISO(startDate), "MMM dd, yyyy")} –{" "}
                 {format(parseISO(endDate), "MMM dd, yyyy")}
               </span>
@@ -1232,7 +1243,7 @@ export default function Home() {
         </div>
 
         {/* Key Metrics Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6 mb-12 relative z-10">
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3 sm:gap-4 lg:gap-6 mb-10 sm:mb-12 relative z-10">
           {[
             {
               label: "Total Visitors",
@@ -1267,12 +1278,12 @@ export default function Home() {
           ].map((metric, index) => (
             <div
               key={index}
-              className={`glass-card border ${metric.borderColor} p-7 rounded-3xl transition-all duration-500 hover:shadow-2xl hover:scale-[1.02] hover:border-white/60 bg-gradient-to-br ${metric.gradient}`}
+              className={`glass-card border ${metric.borderColor} p-3 sm:p-5 lg:p-7 rounded-2xl sm:rounded-3xl transition-all duration-300 active:scale-95 sm:active:scale-100 sm:hover:shadow-2xl sm:hover:scale-[1.02] sm:hover:border-white/60 bg-gradient-to-br ${metric.gradient} touch-manipulation`}
             >
-              <h3 className="text-xs font-semibold text-gray-600 mb-4 uppercase tracking-wider">
+              <h3 className="text-[10px] sm:text-xs font-semibold text-gray-600 mb-2 sm:mb-4 uppercase tracking-wider">
                 {metric.label}
               </h3>
-              <p className="text-5xl font-bold leading-tight bg-gradient-to-br from-gray-900 to-gray-700 bg-clip-text text-transparent">
+              <p className="text-2xl sm:text-3xl lg:text-5xl font-bold leading-tight bg-gradient-to-br from-gray-900 to-gray-700 bg-clip-text text-transparent">
                 {typeof metric.value === "number"
                   ? metric.value.toLocaleString()
                   : metric.value}
@@ -1282,19 +1293,24 @@ export default function Home() {
         </div>
 
         {/* Section 1: Top Performing Pages */}
-        <div className="mb-10 relative z-10">
-          <div className="mb-7 pb-5 border-b border-gray-200/50">
-            <h2 className="text-xl font-bold text-black uppercase tracking-wider flex items-center gap-3">
-              <span className="w-1 h-8 bg-gradient-to-b from-blue-500 to-cyan-500 rounded-full"></span>
+        <div className="mb-10 sm:mb-10 relative z-10">
+          <div className="mb-6 sm:mb-7 pb-4 sm:pb-5 border-b border-gray-200/50">
+            <h2 className="text-xl sm:text-xl font-bold text-black uppercase tracking-wider flex items-center gap-3 sm:gap-3">
+              <span className="w-1.5 h-8 sm:h-8 bg-gradient-to-b from-blue-500 to-cyan-500 rounded-full"></span>
               Top Performing Pages
             </h2>
           </div>
-          <div className="glass-card border border-white/40 rounded-3xl p-6 bg-gradient-to-br from-blue-50/50 to-cyan-50/30">
-            <ResponsiveContainer width="100%" height={350}>
+          <div className="glass-card border border-white/40 rounded-3xl sm:rounded-3xl p-5 sm:p-4 lg:p-6 bg-gradient-to-br from-blue-50/50 to-cyan-50/30">
+            <ResponsiveContainer width="100%" height={300}>
               <BarChart
                 data={analyticsData.topPages}
                 layout="vertical"
-                margin={{ top: 20, right: 30, left: 100, bottom: 20 }}
+                margin={{
+                  top: 20,
+                  right: 10,
+                  left: isMobile ? 0 : 70,
+                  bottom: 20,
+                }}
               >
                 <CartesianGrid
                   strokeDasharray="3 3"
@@ -1310,11 +1326,41 @@ export default function Home() {
                 <YAxis
                   dataKey="name"
                   type="category"
-                  width={90}
+                  width={isMobile ? 40 : 60}
                   stroke="#4a4a4a"
-                  tick={{ fontSize: 11, fill: "#666" }}
+                  tick={{ fontSize: isMobile ? 8 : 9, fill: "#666" }}
                 />
-                <Tooltip content={<CustomTooltip />} />
+                <Tooltip
+                  content={({ active, payload, label }) => {
+                    if (active && payload && payload.length) {
+                      const entry = payload[0];
+                      const dataIndex = analyticsData.topPages.findIndex(
+                        (item) => item.name === label
+                      );
+                      const color = COLORS[dataIndex % COLORS.length];
+                      return (
+                        <div className="glass-card border border-white/50 p-4 rounded-xl shadow-2xl backdrop-blur-xl">
+                          <p className="font-bold text-black mb-2 text-base border-b border-gray-200/50 pb-2">
+                            {label}
+                          </p>
+                          <p className="text-sm text-black flex items-center gap-2">
+                            <span
+                              className="w-3 h-3 rounded-sm"
+                              style={{ backgroundColor: color }}
+                            ></span>
+                            <span className="font-semibold">{entry.name}:</span>{" "}
+                            <span className="font-bold">
+                              {typeof entry.value === "number"
+                                ? entry.value.toLocaleString()
+                                : entry.value}
+                            </span>
+                          </p>
+                        </div>
+                      );
+                    }
+                    return null;
+                  }}
+                />
                 <Legend
                   wrapperStyle={{ paddingTop: "20px" }}
                   iconType="square"
@@ -1339,26 +1385,29 @@ export default function Home() {
         </div>
 
         {/* Section 2: Traffic Sources & Countries */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-10 relative z-10">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-6 lg:gap-8 mb-10 sm:mb-10 relative z-10">
           <div>
-            <div className="mb-7 pb-5 border-b border-gray-200/50">
-              <h2 className="text-xl font-bold text-black uppercase tracking-wider flex items-center gap-3">
-                <span className="w-1 h-8 bg-gradient-to-b from-purple-500 to-pink-500 rounded-full"></span>
+            <div className="mb-6 sm:mb-7 pb-4 sm:pb-5 border-b border-gray-200/50">
+              <h2 className="text-xl sm:text-xl font-bold text-black uppercase tracking-wider flex items-center gap-3 sm:gap-3">
+                <span className="w-1.5 h-8 sm:h-8 bg-gradient-to-b from-purple-500 to-pink-500 rounded-full"></span>
                 Traffic Sources
               </h2>
             </div>
-            <div className="glass-card border border-white/40 rounded-3xl p-6 bg-gradient-to-br from-purple-50/50 to-pink-50/30">
-              <ResponsiveContainer width="100%" height={350}>
+            <div className="glass-card border border-white/40 rounded-3xl sm:rounded-3xl p-5 sm:p-4 lg:p-6 bg-gradient-to-br from-purple-50/50 to-pink-50/30">
+              <ResponsiveContainer width="100%" height={isMobile ? 250 : 300}>
                 <PieChart>
                   <Pie
                     data={analyticsData.trafficSources}
                     cx="50%"
                     cy="50%"
                     labelLine={false}
-                    label={({ name, percent }) =>
-                      `${name}: ${(percent * 100).toFixed(0)}%`
+                    label={
+                      !isMobile
+                        ? ({ name, percent }) =>
+                            `${name}: ${(percent * 100).toFixed(0)}%`
+                        : false
                     }
-                    outerRadius={110}
+                    outerRadius={isMobile ? 80 : 110}
                     fill="#000000"
                     dataKey="visitors"
                   >
@@ -1371,26 +1420,67 @@ export default function Home() {
                       />
                     ))}
                   </Pie>
-                  <Tooltip content={<CustomTooltip />} />
+                  <Tooltip
+                    content={({ active, payload }) => {
+                      if (active && payload && payload.length) {
+                        const entry = payload[0];
+                        const dataIndex =
+                          analyticsData.trafficSources.findIndex(
+                            (item) => item.name === entry.name
+                          );
+                        const color = COLORS[dataIndex % COLORS.length];
+                        return (
+                          <div className="glass-card border border-white/50 p-4 rounded-xl shadow-2xl backdrop-blur-xl">
+                            <p className="font-bold text-black mb-2 text-base border-b border-gray-200/50 pb-2">
+                              {entry.name}
+                            </p>
+                            <p className="text-sm text-black flex items-center gap-2">
+                              <span
+                                className="w-3 h-3 rounded-sm"
+                                style={{ backgroundColor: color }}
+                              ></span>
+                              <span className="font-semibold">Visitors:</span>{" "}
+                              <span className="font-bold">
+                                {typeof entry.value === "number"
+                                  ? entry.value.toLocaleString()
+                                  : entry.value}
+                              </span>
+                            </p>
+                          </div>
+                        );
+                      }
+                      return null;
+                    }}
+                  />
+                  <Legend
+                    wrapperStyle={{ paddingTop: "20px" }}
+                    iconType="square"
+                    iconSize={12}
+                    formatter={(value) => (
+                      <span style={{ color: "#4a4a4a", fontWeight: 500 }}>
+                        {value}
+                      </span>
+                    )}
+                  />
                 </PieChart>
               </ResponsiveContainer>
             </div>
-            <div className="mt-6 pt-5 border-t border-gray-200/50 space-y-3">
+            <div className="mt-5 sm:mt-6 pt-5 sm:pt-5 border-t border-gray-200/50 grid grid-cols-2 sm:grid-cols-1 gap-3 sm:space-y-3">
               {analyticsData.trafficSources.map((source, index) => (
                 <div
                   key={index}
-                  className="flex justify-between items-center py-2 px-3 rounded-lg hover:bg-white/30 transition-colors"
+                  className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2 sm:gap-0 py-3 px-3 sm:px-3 rounded-xl sm:rounded-lg sm:hover:bg-white/30 active:bg-white/40 sm:active:bg-white/30 transition-colors touch-manipulation"
                 >
-                  <div className="flex items-center gap-3">
+                  <div className="flex items-center gap-2 sm:gap-3">
                     <div
-                      className="w-4 h-4 rounded-sm border-2 border-gray-300 shadow-sm"
+                      className="w-4 h-4 sm:w-4 sm:h-4 rounded-sm border-2 border-gray-300 shadow-sm shrink-0"
                       style={{ backgroundColor: COLORS[index % COLORS.length] }}
                     />
-                    <span className="text-sm text-gray-700 font-semibold">
+                    <span className="text-sm sm:text-sm text-gray-700 font-semibold">
                       {source.name}
                     </span>
                   </div>
-                  <span className="text-sm font-bold text-black bg-white/40 px-3 py-1 rounded-md">
+                  <span className="text-sm sm:text-sm font-bold text-black bg-white/40 px-2 sm:px-3 py-1.5 sm:py-1 rounded-lg sm:rounded-md self-start sm:self-auto">
                     {source.visitors.toLocaleString()}
                   </span>
                 </div>
@@ -1399,18 +1489,23 @@ export default function Home() {
           </div>
 
           <div>
-            <div className="mb-7 pb-5 border-b border-gray-200/50">
-              <h2 className="text-xl font-bold text-black uppercase tracking-wider flex items-center gap-3">
-                <span className="w-1 h-8 bg-gradient-to-b from-green-500 to-emerald-500 rounded-full"></span>
+            <div className="mb-6 sm:mb-7 pb-4 sm:pb-5 border-b border-gray-200/50">
+              <h2 className="text-xl sm:text-xl font-bold text-black uppercase tracking-wider flex items-center gap-3 sm:gap-3">
+                <span className="w-1.5 h-8 sm:h-8 bg-gradient-to-b from-green-500 to-emerald-500 rounded-full"></span>
                 Top Countries
               </h2>
             </div>
-            <div className="glass-card border border-white/40 rounded-3xl p-6 bg-gradient-to-br from-green-50/50 to-emerald-50/30">
-              <ResponsiveContainer width="100%" height={350}>
+            <div className="glass-card border border-white/40 rounded-3xl sm:rounded-3xl p-5 sm:p-4 lg:p-6 bg-gradient-to-br from-green-50/50 to-emerald-50/30">
+              <ResponsiveContainer width="100%" height={300}>
                 <BarChart
                   data={analyticsData.countries}
                   layout="vertical"
-                  margin={{ top: 20, right: 30, left: 20, bottom: 20 }}
+                  margin={{
+                    top: 20,
+                    right: 30,
+                    left: isMobile ? 0 : 20,
+                    bottom: 20,
+                  }}
                 >
                   <CartesianGrid
                     strokeDasharray="3 3"
@@ -1426,14 +1521,110 @@ export default function Home() {
                   <YAxis
                     dataKey="code"
                     type="category"
-                    width={70}
+                    width={isMobile ? 30 : 70}
                     stroke="#4a4a4a"
-                    tick={{ fontSize: 11, fill: "#666" }}
+                    tick={{ fontSize: isMobile ? 9 : 11, fill: "#666" }}
                   />
-                  <Tooltip content={<CustomTooltip />} />
+                  <Tooltip
+                    content={({ active, payload, label }) => {
+                      if (active && payload && payload.length) {
+                        const countryIndex = analyticsData.countries.findIndex(
+                          (c) => c.code === label
+                        );
+                        return (
+                          <div className="glass-card border border-white/50 p-4 rounded-xl shadow-2xl backdrop-blur-xl">
+                            <p className="font-bold text-black mb-2 text-base border-b border-gray-200/50 pb-2">
+                              {analyticsData.countries[countryIndex]?.country ||
+                                label}
+                            </p>
+                            {payload.map((entry, index) => {
+                              const color =
+                                entry.dataKey === "visitors"
+                                  ? COLORS[countryIndex % COLORS.length]
+                                  : COLORS[(countryIndex + 3) % COLORS.length];
+                              return (
+                                <p
+                                  key={index}
+                                  className="text-sm text-black flex items-center gap-2"
+                                >
+                                  <span
+                                    className="w-3 h-3 rounded-sm"
+                                    style={{ backgroundColor: color }}
+                                  ></span>
+                                  <span className="font-semibold">
+                                    {entry.name}:
+                                  </span>{" "}
+                                  <span className="font-bold">
+                                    {typeof entry.value === "number"
+                                      ? entry.value.toLocaleString()
+                                      : entry.value}
+                                  </span>
+                                </p>
+                              );
+                            })}
+                          </div>
+                        );
+                      }
+                      return null;
+                    }}
+                  />
                   <Legend
                     wrapperStyle={{ paddingTop: "20px" }}
                     iconType="square"
+                    iconSize={12}
+                    formatter={(value, entry) => {
+                      const color =
+                        value === "Visitors" ? COLORS[0] : COLORS[3];
+                      return (
+                        <span style={{ color: "#4a4a4a", fontWeight: 500 }}>
+                          {value}
+                        </span>
+                      );
+                    }}
+                    content={({ payload }) => {
+                      return (
+                        <div
+                          style={{
+                            display: "flex",
+                            justifyContent: "center",
+                            gap: "20px",
+                            paddingTop: "20px",
+                          }}
+                        >
+                          {payload?.map((entry, index) => {
+                            const color =
+                              entry.dataKey === "visitors"
+                                ? COLORS[0]
+                                : COLORS[3];
+                            return (
+                              <div
+                                key={index}
+                                style={{
+                                  display: "flex",
+                                  alignItems: "center",
+                                  gap: "8px",
+                                }}
+                              >
+                                <div
+                                  style={{
+                                    width: "12px",
+                                    height: "12px",
+                                    backgroundColor: color,
+                                    border: "2px solid #d1d5db",
+                                    borderRadius: "2px",
+                                  }}
+                                />
+                                <span
+                                  style={{ color: "#4a4a4a", fontWeight: 500 }}
+                                >
+                                  {entry.value}
+                                </span>
+                              </div>
+                            );
+                          })}
+                        </div>
+                      );
+                    }}
                   />
                   <Bar dataKey="visitors" name="Visitors" radius={[4, 0, 0, 4]}>
                     {analyticsData.countries.map((entry, index) => (
@@ -1458,24 +1649,28 @@ export default function Home() {
         </div>
 
         {/* Section 3: Device Breakdown & OS */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-10 relative z-10">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-6 lg:gap-8 mb-10 sm:mb-10 relative z-10">
           <div>
-            <div className="mb-7 pb-5 border-b border-gray-200/50">
-              <h2 className="text-xl font-bold text-black uppercase tracking-wider flex items-center gap-3">
-                <span className="w-1 h-8 bg-gradient-to-b from-indigo-500 to-blue-500 rounded-full"></span>
+            <div className="mb-6 sm:mb-7 pb-4 sm:pb-5 border-b border-gray-200/50">
+              <h2 className="text-xl sm:text-xl font-bold text-black uppercase tracking-wider flex items-center gap-3 sm:gap-3">
+                <span className="w-1.5 h-8 sm:h-8 bg-gradient-to-b from-indigo-500 to-blue-500 rounded-full"></span>
                 Device Breakdown
               </h2>
             </div>
-            <div className="glass-card border border-white/40 rounded-3xl p-6 bg-gradient-to-br from-indigo-50/50 to-blue-50/30">
-              <ResponsiveContainer width="100%" height={300}>
+            <div className="glass-card border border-white/40 rounded-3xl sm:rounded-3xl p-5 sm:p-4 lg:p-6 bg-gradient-to-br from-indigo-50/50 to-blue-50/30">
+              <ResponsiveContainer width="100%" height={isMobile ? 250 : 280}>
                 <PieChart>
                   <Pie
                     data={analyticsData.devices}
                     cx="50%"
                     cy="50%"
                     labelLine={false}
-                    label={({ name, percentage }) => `${name}: ${percentage}%`}
-                    outerRadius={100}
+                    label={
+                      !isMobile
+                        ? ({ name, percentage }) => `${name}: ${percentage}%`
+                        : false
+                    }
+                    outerRadius={isMobile ? 80 : 100}
                     fill="#000000"
                     dataKey="visitors"
                   >
@@ -1488,30 +1683,88 @@ export default function Home() {
                       />
                     ))}
                   </Pie>
-                  <Tooltip content={<CustomTooltip />} />
+                  <Tooltip
+                    content={({ active, payload }) => {
+                      if (active && payload && payload.length) {
+                        const entry = payload[0];
+                        // For PieChart, the name might be in entry.payload.name or entry.name
+                        const deviceName = entry.payload?.name || entry.name;
+                        const dataIndex = analyticsData.devices.findIndex(
+                          (item) => item.name === deviceName
+                        );
+                        const color =
+                          dataIndex >= 0
+                            ? COLORS[dataIndex % COLORS.length]
+                            : COLORS[0];
+                        const deviceData =
+                          analyticsData.devices[dataIndex] ||
+                          analyticsData.devices[0];
+                        return (
+                          <div className="glass-card border border-white/50 p-4 rounded-xl shadow-2xl backdrop-blur-xl">
+                            <p className="font-bold text-black mb-2 text-base border-b border-gray-200/50 pb-2">
+                              {deviceName}
+                            </p>
+                            <p className="text-sm text-black flex items-center gap-2">
+                              <span
+                                className="w-3 h-3 rounded-sm"
+                                style={{ backgroundColor: color }}
+                              ></span>
+                              <span className="font-semibold">Visitors:</span>{" "}
+                              <span className="font-bold">
+                                {typeof entry.value === "number"
+                                  ? entry.value.toLocaleString()
+                                  : entry.value}
+                              </span>
+                            </p>
+                            <p className="text-sm text-black flex items-center gap-2 mt-1">
+                              <span
+                                className="w-3 h-3 rounded-sm"
+                                style={{ backgroundColor: color }}
+                              ></span>
+                              <span className="font-semibold">Percentage:</span>{" "}
+                              <span className="font-bold">
+                                {deviceData?.percentage}%
+                              </span>
+                            </p>
+                          </div>
+                        );
+                      }
+                      return null;
+                    }}
+                  />
+                  <Legend
+                    wrapperStyle={{ paddingTop: "20px" }}
+                    iconType="square"
+                    iconSize={12}
+                    formatter={(value) => (
+                      <span style={{ color: "#4a4a4a", fontWeight: 500 }}>
+                        {value}
+                      </span>
+                    )}
+                  />
                 </PieChart>
               </ResponsiveContainer>
             </div>
-            <div className="mt-6 pt-5 border-t border-gray-200/50 space-y-3">
+            <div className="mt-5 sm:mt-6 pt-5 sm:pt-5 border-t border-gray-200/50 grid grid-cols-2 sm:grid-cols-1 gap-3 sm:space-y-3">
               {analyticsData.devices.map((device, index) => (
                 <div
                   key={index}
-                  className="flex justify-between items-center py-3 px-3 rounded-lg hover:bg-white/30 transition-colors border-b border-gray-100/50 last:border-0"
+                  className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2 sm:gap-0 py-3 sm:py-3 px-3 sm:px-3 rounded-xl sm:rounded-lg sm:hover:bg-white/30 active:bg-white/40 sm:active:bg-white/30 transition-colors border-b border-gray-100/50 last:border-0 touch-manipulation"
                 >
-                  <div className="flex items-center gap-3">
+                  <div className="flex items-center gap-2 sm:gap-3">
                     <div
-                      className="w-4 h-4 rounded-sm border-2 border-gray-300 shadow-sm"
+                      className="w-4 h-4 sm:w-4 sm:h-4 rounded-sm border-2 border-gray-300 shadow-sm shrink-0"
                       style={{ backgroundColor: COLORS[index % COLORS.length] }}
                     />
-                    <span className="text-sm text-gray-700 font-semibold">
+                    <span className="text-sm sm:text-sm text-gray-700 font-semibold">
                       {device.name}
                     </span>
                   </div>
-                  <div className="text-right">
-                    <span className="text-sm font-bold text-black block mb-1">
+                  <div className="text-left sm:text-right">
+                    <span className="text-sm sm:text-sm font-bold text-black block mb-1 sm:mb-1">
                       {device.visitors.toLocaleString()}
                     </span>
-                    <span className="text-xs text-gray-500 bg-white/40 px-2 py-0.5 rounded">
+                    <span className="text-xs text-gray-500 bg-white/40 px-2 py-1 sm:px-2 sm:py-0.5 rounded-lg sm:rounded inline-block">
                       {device.percentage}%
                     </span>
                   </div>
@@ -1521,17 +1774,22 @@ export default function Home() {
           </div>
 
           <div>
-            <div className="mb-7 pb-5 border-b border-gray-200/50">
-              <h2 className="text-xl font-bold text-black uppercase tracking-wider flex items-center gap-3">
-                <span className="w-1 h-8 bg-gradient-to-b from-orange-500 to-amber-500 rounded-full"></span>
+            <div className="mb-6 sm:mb-7 pb-4 sm:pb-5 border-b border-gray-200/50">
+              <h2 className="text-xl sm:text-xl font-bold text-black uppercase tracking-wider flex items-center gap-3 sm:gap-3">
+                <span className="w-1.5 h-8 sm:h-8 bg-gradient-to-b from-orange-500 to-amber-500 rounded-full"></span>
                 Operating Systems
               </h2>
             </div>
-            <div className="glass-card border border-white/40 rounded-3xl p-6 bg-gradient-to-br from-orange-50/50 to-amber-50/30">
-              <ResponsiveContainer width="100%" height={300}>
+            <div className="glass-card border border-white/40 rounded-3xl sm:rounded-3xl p-5 sm:p-4 lg:p-6 bg-gradient-to-br from-orange-50/50 to-amber-50/30">
+              <ResponsiveContainer width="100%" height={isMobile ? 300 : 400}>
                 <BarChart
                   data={analyticsData.operatingSystems}
-                  margin={{ top: 20, right: 30, left: 20, bottom: 20 }}
+                  margin={{
+                    top: 20,
+                    right: 30,
+                    left: isMobile ? 10 : 20,
+                    bottom: 20,
+                  }}
                 >
                   <CartesianGrid
                     strokeDasharray="3 3"
@@ -1541,14 +1799,51 @@ export default function Home() {
                   <XAxis
                     dataKey="name"
                     stroke="#4a4a4a"
-                    tick={{ fontSize: 11, fill: "#666" }}
+                    tick={{ fontSize: isMobile ? 9 : 11, fill: "#666" }}
+                    angle={isMobile ? -45 : 0}
+                    textAnchor={isMobile ? "end" : "middle"}
+                    height={isMobile ? 60 : 30}
                   />
                   <YAxis
                     stroke="#4a4a4a"
-                    tick={{ fontSize: 11, fill: "#666" }}
-                    width={50}
+                    tick={{ fontSize: isMobile ? 9 : 11, fill: "#666" }}
+                    width={isMobile ? 35 : 50}
                   />
-                  <Tooltip content={<CustomTooltip />} />
+                  <Tooltip
+                    content={({ active, payload, label }) => {
+                      if (active && payload && payload.length) {
+                        const entry = payload[0];
+                        const dataIndex =
+                          analyticsData.operatingSystems.findIndex(
+                            (item) => item.name === label
+                          );
+                        const color = COLORS[dataIndex % COLORS.length];
+                        return (
+                          <div className="glass-card border border-white/50 p-4 rounded-xl shadow-2xl backdrop-blur-xl">
+                            <p className="font-bold text-black mb-2 text-base border-b border-gray-200/50 pb-2">
+                              {label}
+                            </p>
+                            <p className="text-sm text-black flex items-center gap-2">
+                              <span
+                                className="w-3 h-3 rounded-sm"
+                                style={{ backgroundColor: color }}
+                              ></span>
+                              <span className="font-semibold">
+                                {entry.name}:
+                              </span>{" "}
+                              <span className="font-bold">
+                                {typeof entry.value === "number"
+                                  ? entry.value.toLocaleString()
+                                  : entry.value}
+                                %
+                              </span>
+                            </p>
+                          </div>
+                        );
+                      }
+                      return null;
+                    }}
+                  />
                   <Legend
                     wrapperStyle={{ paddingTop: "20px" }}
                     iconType="square"
@@ -1572,18 +1867,20 @@ export default function Home() {
         </div>
 
         {/* Section 4: Content Highlights */}
-        <div className="mb-10 relative z-10">
-          <div className="mb-7 pb-5 border-b border-gray-200/50">
-            <h2 className="text-xl font-bold text-black uppercase tracking-wider flex items-center gap-3">
-              <span className="w-1 h-8 bg-gradient-to-b from-rose-500 to-pink-500 rounded-full"></span>
-              Content Highlights: The "Meydan" Factor
+        <div className="mb-10 sm:mb-10 relative z-10">
+          <div className="mb-6 sm:mb-7 pb-4 sm:pb-5 border-b border-gray-200/50">
+            <h2 className="text-xl sm:text-xl font-bold text-black uppercase tracking-wider flex items-center gap-3 sm:gap-3">
+              <span className="w-1.5 h-8 sm:h-8 bg-gradient-to-b from-rose-500 to-pink-500 rounded-full"></span>
+              <span className="wrap-break-word">
+                Content Highlights: The "Meydan" Factor
+              </span>
             </h2>
           </div>
-          <div className="glass-card border border-white/40 p-8 rounded-3xl transition-all duration-500 hover:shadow-2xl">
-            <h3 className="text-lg font-bold text-black mb-4 leading-snug">
+          <div className="glass-card border border-white/40 p-6 sm:p-6 lg:p-8 rounded-3xl sm:rounded-3xl transition-all duration-300 sm:hover:shadow-2xl active:scale-[0.98] sm:active:scale-100 touch-manipulation">
+            <h3 className="text-lg sm:text-lg font-bold text-black mb-4 sm:mb-4 leading-snug">
               {analyticsData.blogPost.title}
             </h3>
-            <p className="text-sm text-gray-700 mb-6 leading-relaxed">
+            <p className="text-sm sm:text-sm text-gray-700 mb-5 sm:mb-6 leading-relaxed">
               This blog post continues to be a featured asset with{" "}
               <span className="font-bold text-black">
                 {analyticsData.blogPost.lifetimeViews.toLocaleString()} lifetime
@@ -1592,11 +1889,11 @@ export default function Home() {
               , serving as a critical entry point for high-net-worth individuals
               looking for capital appreciation.
             </p>
-            <div className="flex items-center gap-4 pt-5 border-t border-gray-200/50">
-              <span className="text-xs font-semibold text-gray-600 uppercase tracking-wide">
+            <div className="flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-4 pt-5 sm:pt-5 border-t border-gray-200/50">
+              <span className="text-sm sm:text-xs font-semibold text-gray-600 uppercase tracking-wide">
                 Lifetime Views:
               </span>
-              <span className="text-3xl font-bold bg-gradient-to-r from-gray-900 to-gray-700 bg-clip-text text-transparent">
+              <span className="text-3xl sm:text-3xl font-bold bg-gradient-to-r from-gray-900 to-gray-700 bg-clip-text text-transparent">
                 {analyticsData.blogPost.lifetimeViews.toLocaleString()}
               </span>
             </div>
@@ -1604,24 +1901,43 @@ export default function Home() {
         </div>
 
         {/* Insights Section */}
-        <div className="glass-dark border border-white/20 p-8 mb-8 rounded-2xl shadow-xl relative z-10">
-          <div className="mb-6 pb-4 border-b border-white/20">
-            <h2 className="text-lg font-bold text-white uppercase tracking-wider">
+        <div className="glass-dark border border-white/20 p-6 sm:p-6 lg:p-8 mb-8 rounded-3xl sm:rounded-2xl shadow-xl relative z-10">
+          <div className="mb-5 sm:mb-6 pb-4 sm:pb-4 border-b border-white/20">
+            <h2 className="text-lg sm:text-lg font-bold text-white uppercase tracking-wider">
               Key Insights
             </h2>
           </div>
-          <ul className="space-y-4">
+          <ul className="space-y-4 sm:space-y-4">
             {[
               "The high traffic to the /team and /careers pages correlates strongly with the 74 resumes received, indicating high intent among job seekers.",
               "Your audience is highly concentrated in the UAE and Singapore, suggesting strong international investor interest.",
               "A staggering majority of users (77.8%) access the site via desktop, typical for high-value real estate research and job applications.",
             ].map((insight, index) => (
-              <li key={index} className="flex items-start gap-4 text-white">
-                <span className="text-white font-bold text-lg mt-0.5">•</span>
-                <span className="text-sm leading-relaxed">{insight}</span>
+              <li
+                key={index}
+                className="flex items-start gap-4 sm:gap-4 text-white"
+              >
+                <span className="text-white font-bold text-lg sm:text-lg mt-0.5 shrink-0">
+                  •
+                </span>
+                <span className="text-sm sm:text-sm leading-relaxed">
+                  {insight}
+                </span>
               </li>
             ))}
           </ul>
+        </div>
+
+        {/* Export PDF Button - Mobile/Tablet Only */}
+        <div className="fixed md:hidden bottom-0 left-0 right-0 z-50 p-4 bg-gradient-to-t from-white via-white/98 to-white/95 backdrop-blur-xl border-t border-gray-200/30 shadow-[0_-4px_20px_rgba(0,0,0,0.08)]">
+          <div className="max-w-7xl mx-auto">
+            <button
+              onClick={handleExportPDF}
+              className="w-full px-6 py-3.5 bg-black text-white rounded-xl hover:bg-gray-900 active:scale-[0.98] transition-all duration-200 flex items-center justify-center gap-2 font-semibold text-sm shadow-lg touch-manipulation"
+            >
+              Export PDF
+            </button>
+          </div>
         </div>
       </div>
     </div>
