@@ -147,10 +147,9 @@ export const generatePieChartImage = (
 ) => {
   const canvas = document.createElement("canvas");
   const pieChartSize = Math.min(width, height);
-  // Increase width for 2-column legend layout, but keep same dimensions for mobile
+  // Keep same dimensions for all charts regardless of legend columns
   const baseChartWidth = pieChartSize * pieChartWidth;
-  const chartWidth =
-    legendColumns === 2 && !isMobile ? baseChartWidth * 1.3 : baseChartWidth;
+  const chartWidth = baseChartWidth;
   const chartHeight = pieChartSize;
   canvas.width = chartWidth;
   canvas.height = chartHeight;
