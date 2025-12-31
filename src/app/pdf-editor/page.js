@@ -30,9 +30,10 @@ const reportData = {
     { name: "Careers", visitors: 146 },
   ],
   trafficSources: [
-    { name: "Google Search", visitors: 654 },
-    { name: "Facebook", visitors: 142 },
-    { name: "Direct/Others", visitors: 1920 },
+    { name: "Google Search", visitors: 691 },
+    { name: "Meta", visitors: 167 },
+    { name: "Bing", visitors: 32 },
+    { name: "Direct/Others", visitors: 2295 },
   ],
   countries: [
     { country: "Singapore (SG)", code: "SG", visitors: 837, views: 1499 },

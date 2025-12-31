@@ -38,61 +38,60 @@ import {
 // Report data
 const reportData = {
   period: {
-    start: "2025-11-29",
-    end: "2025-12-29",
+    start: "2025-12-01",
+    end: "2025-12-31",
   },
   metrics: {
-    totalVisitors: 2976,
-    totalPageViews: 5699,
+    totalVisitors: 3185,
+    totalPageViews: 5990,
     resumesReceived: 74,
-    conversionRate: 2.5,
+    conversionRate: 2.3,
     leadsToBitrix: 22,
   },
   topPages: [
-    { name: "Homepage", visitors: 1248 },
-    { name: "Team", visitors: 239 },
-    { name: "Contact", visitors: 206 },
-    { name: "Blog", visitors: 190 },
-    { name: "Property", visitors: 159 },
-    { name: "Careers", visitors: 150 },
+    { name: "Homepage", visitors: 1286 },
+    { name: "Team", visitors: 250 },
+    { name: "Contact", visitors: 211 },
+    { name: "Blog", visitors: 195 },
+    { name: "Properties", visitors: 162 },
+    { name: "Careers", visitors: 155 },
   ],
   trafficSources: [
-    { name: "Google Search", visitors: 676 },
-    { name: "Bing", visitors: 29 },
-    { name: "Direct/Others", visitors: 2119 },
-    { name: "Meta", visitors: 145 },
+    { name: "Google Search", visitors: 691 },
+    { name: "Meta", visitors: 167 },
+    { name: "Bing", visitors: 32 },
+    { name: "Direct/Others", visitors: 2295 },
   ],
   countries: [
-    { country: "Singapore (SG)", code: "SG", visitors: 960, views: 1643 },
+    { country: "Singapore (SG)", code: "SG", visitors: 1081, views: 1786 },
     {
       country: "United Arab Emirates (AE)",
       code: "AE",
-      visitors: 652,
-      views: 1695,
+      visitors: 670,
+      views: 1733,
     },
-    { country: "India (IN)", code: "IN", visitors: 414, views: 974 },
-    { country: "China (CN)", code: "CN", visitors: 203, views: 214 },
-    { country: "United States (US)", code: "US", visitors: 153, views: 183 },
-    { country: "Pakistan (PK)", code: "PK", visitors: 87, views: 128 },
-    { country: "Brazil (BR)", code: "BR", visitors: 58, views: 59 },
-    { country: "United Kingdom (GB)", code: "GB", visitors: 47, views: 77 },
+    { country: "India (IN)", code: "IN", visitors: 423, views: 994 },
+    { country: "China (CN)", code: "CN", visitors: 211, views: 223 },
+    { country: "United States (US)", code: "US", visitors: 160, views: 190 },
+    { country: "Pakistan (PK)", code: "PK", visitors: 90, views: 133 },
+    { country: "Brazil (BR)", code: "BR", visitors: 65, views: 66 },
+    { country: "United Kingdom (GB)", code: "GB", visitors: 49, views: 83 },
   ],
   devices: [
-    { name: "Desktop", visitors: 2338, percentage: 78.6 },
-    { name: "Mobile", visitors: 637, percentage: 21.4 },
+    { name: "Desktop", visitors: 2526, percentage: 79.3 },
+    { name: "Mobile", visitors: 658, percentage: 20.7 },
     { name: "Tablet", visitors: 1, percentage: 0.0 },
   ],
   operatingSystems: [
-    { name: "Windows", percentage: 69.4 },
-    { name: "iOS", percentage: 11.7 },
-    { name: "Android", percentage: 9.7 },
-    { name: "Mac OS", percentage: 7.8 },
-    { name: "GNU/Linux", percentage: 1.0 },
-    { name: "Others", percentage: 0.4 },
+    { name: "Windows", percentage: 70.6 },
+    { name: "iOS", percentage: 11.4 },
+    { name: "Android", percentage: 9.3 },
+    { name: "Mac", percentage: 7.5 },
+    { name: "Others", percentage: 1.2 },
   ],
   blogPost: {
     title: "Why Millionaires are Flocking to Dubai in 2025",
-    lifetimeViews: 37,
+    lifetimeViews: 39,
   },
 };
 
@@ -657,7 +656,7 @@ export default function Home() {
       pdf.setFontSize(9);
       pdf.setFont("helvetica", "normal");
       const insights = [
-        "The high traffic to the /team and /careers pages correlates strongly with the 74 resumes received, indicating high intent among job seekers.",
+        "The high traffic to the /team and /careers pages correlates strongly with the 75 resumes received, indicating high intent among job seekers.",
         "Your audience is highly concentrated in the UAE and Singapore, suggesting strong international investor interest.",
         "A staggering majority of users (77.8%) access the site via desktop, typical for high-value real estate research and job applications.",
       ];
@@ -1165,7 +1164,7 @@ export default function Home() {
       );
 
       const insights = [
-        "The high traffic to the /team and /careers pages correlates strongly with the 74 resumes received, indicating high intent among job seekers.",
+        "The high traffic to the /team and /careers pages correlates strongly with the 75 resumes received, indicating high intent among job seekers.",
         "Your audience is highly concentrated in the UAE and Singapore, suggesting strong international investor interest.",
         "A staggering majority of users (77.8%) access the site via desktop, typical for high-value real estate research and job applications.",
       ];
@@ -1486,12 +1485,7 @@ export default function Home() {
                     cx="50%"
                     cy="50%"
                     labelLine={false}
-                    label={
-                      !isMobile
-                        ? ({ name, percent }) =>
-                            `${name}: ${(percent * 100).toFixed(0)}%`
-                        : false
-                    }
+                    label={false}
                     outerRadius={isMobile ? 80 : 110}
                     fill="#000000"
                     dataKey="visitors"
@@ -1750,11 +1744,7 @@ export default function Home() {
                     cx="50%"
                     cy="50%"
                     labelLine={false}
-                    label={
-                      !isMobile
-                        ? ({ name, percentage }) => `${name}: ${percentage}%`
-                        : false
-                    }
+                    label={false}
                     outerRadius={isMobile ? 80 : 100}
                     fill="#000000"
                     dataKey="visitors"
@@ -1994,7 +1984,7 @@ export default function Home() {
           </div>
           <ul className="space-y-4 sm:space-y-4">
             {[
-              "The high traffic to the /team and /careers pages correlates strongly with the 74 resumes received, indicating high intent among job seekers.",
+              "The high traffic to the /team and /careers pages correlates strongly with the 75 resumes received, indicating high intent among job seekers.",
               "Your audience is highly concentrated in the UAE and Singapore, suggesting strong international investor interest.",
               "A staggering majority of users (77.8%) access the site via desktop, typical for high-value real estate research and job applications.",
             ].map((insight, index) => (
