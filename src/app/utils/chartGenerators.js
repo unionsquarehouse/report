@@ -139,7 +139,9 @@ export const generatePieChartImage = (
   height = 400,
   valueKey = "visitors",
   colors = COLORS,
-  pieChartWidth = 2.8
+  pieChartWidth = 2.8,
+  legendFontSize = 12,
+  legendValueFontSize = 11
 ) => {
   const canvas = document.createElement("canvas");
   const pieChartSize = Math.min(width, height);
@@ -217,7 +219,7 @@ export const generatePieChartImage = (
     );
 
     ctx.fillStyle = "#000000";
-    ctx.font = "bold 12px 'Segoe UI', Arial, sans-serif";
+    ctx.font = `bold ${legendFontSize}px 'Segoe UI', Arial, sans-serif`;
     ctx.textAlign = "left";
     ctx.textBaseline = "top";
 
@@ -230,7 +232,7 @@ export const generatePieChartImage = (
     ctx.fillText(displayName, legendX + legendBoxSize + 8, legendY - 6);
 
     ctx.fillStyle = "#666666";
-    ctx.font = "11px 'Segoe UI', Arial, sans-serif";
+    ctx.font = `${legendValueFontSize}px 'Segoe UI', Arial, sans-serif`;
     ctx.fillText(
       `${item[valueKey].toLocaleString()} (${slicePercentage}%)`,
       legendX + legendBoxSize + 8,

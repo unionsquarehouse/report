@@ -263,6 +263,8 @@ export default function Home() {
         cardPadding: isMobileDevice
           ? baseSettings.cardPadding * 1.3
           : baseSettings.cardPadding,
+        legendFontSize: isMobileDevice ? 16 : 12, // Larger legend font for mobile
+        legendValueFontSize: isMobileDevice ? 14 : 11, // Larger legend value font for mobile
       };
 
       const pdf = new jsPDF({
@@ -364,16 +366,26 @@ export default function Home() {
           },
         ];
 
-        const cardWidth = (pageWidth - 2 * margin - 12) / 5;
+        // For mobile: 3 per row, for desktop: 5 per row
+        const metricsPerRow = isMobileDevice ? 3 : 5;
+        const cardWidth =
+          (pageWidth - 2 * margin - (metricsPerRow - 1) * 3) / metricsPerRow;
+        const cardHeight = isMobileDevice ? 25 : 20;
+        const rowSpacing = isMobileDevice ? 5 : 0;
+
         metrics.forEach((metric, index) => {
-          const xPos = margin + index * (cardWidth + 3);
+          const row = Math.floor(index / metricsPerRow);
+          const col = index % metricsPerRow;
+          const xPos = margin + col * (cardWidth + 3);
+          const yPosForCard = yPos + row * (cardHeight + rowSpacing);
+
           pdf.setDrawColor(borderRgb.r, borderRgb.g, borderRgb.b);
           pdf.setFillColor(255, 255, 255);
-          pdf.roundedRect(xPos, yPos, cardWidth, 20, 2, 2, "FD");
+          pdf.roundedRect(xPos, yPosForCard, cardWidth, cardHeight, 2, 2, "FD");
           pdf.setFontSize(settings.bodyFontSize - 1);
           pdf.setFont(settings.fontFamily, "normal");
           pdf.setTextColor(textRgb.r, textRgb.g, textRgb.b);
-          pdf.text(metric.label, xPos + settings.cardPadding, yPos + 5);
+          pdf.text(metric.label, xPos + settings.cardPadding, yPosForCard + 5);
           pdf.setFontSize(settings.headingFontSize);
           pdf.setFont(settings.fontFamily, "bold");
           pdf.setTextColor(primaryRgb.r, primaryRgb.g, primaryRgb.b);
@@ -382,10 +394,12 @@ export default function Home() {
               ? metric.value.toLocaleString()
               : metric.value,
             xPos + settings.cardPadding,
-            yPos + 12
+            yPosForCard + 12
           );
         });
-        yPos += 25;
+        // Calculate total height based on number of rows
+        const totalRows = Math.ceil(metrics.length / metricsPerRow);
+        yPos += totalRows * cardHeight + (totalRows - 1) * rowSpacing + 5;
       }
 
       // Top Performing Pages Chart
@@ -441,7 +455,9 @@ export default function Home() {
           400,
           "visitors",
           settings.barChartColors,
-          trafficPieChartWidth
+          trafficPieChartWidth,
+          settings.legendFontSize,
+          settings.legendValueFontSize
         );
         // Pie chart canvas dimensions:
         // pieChartSize = min(700, 400) = 400
@@ -509,7 +525,9 @@ export default function Home() {
           400,
           "visitors",
           settings.barChartColors,
-          settings.pieChartWidth
+          settings.pieChartWidth,
+          settings.legendFontSize,
+          settings.legendValueFontSize
         );
         // Pie chart canvas dimensions:
         // pieChartSize = min(700, 400) = 400
@@ -546,7 +564,9 @@ export default function Home() {
           400,
           "visitors",
           settings.barChartColors,
-          settings.pieChartWidth
+          settings.pieChartWidth,
+          settings.legendFontSize,
+          settings.legendValueFontSize
         );
         // Pie chart canvas dimensions:
         // pieChartSize = min(700, 400) = 400
@@ -1214,7 +1234,7 @@ export default function Home() {
 
       {/* Header with Filters and Export */}
       <div className="glass sticky top-0 z-50 border-b border-white/30 shadow-lg sm:shadow-2xl backdrop-blur-xl">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-10 py-3 sm:py-4 lg:py-6">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-10">
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 sm:gap-6">
             <div className="flex items-center gap-2 sm:gap-5">
               <Image
