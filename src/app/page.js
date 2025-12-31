@@ -50,11 +50,11 @@ const reportData = {
   },
   topPages: [
     { name: "Homepage", visitors: 1248 },
-    { name: "Team Page", visitors: 239 },
-    { name: "Contact Page", visitors: 206 },
-    { name: "Blog Page", visitors: 190 },
-    { name: "Property Listings", visitors: 159 },
-    { name: "Careers Page", visitors: 150 },
+    { name: "Team", visitors: 239 },
+    { name: "Contact", visitors: 206 },
+    { name: "Blog", visitors: 190 },
+    { name: "Property", visitors: 159 },
+    { name: "Careers", visitors: 150 },
   ],
   trafficSources: [
     { name: "Google Search", visitors: 676 },
@@ -214,9 +214,9 @@ export default function Home() {
         backgroundColor: "#f5f5f5",
         textColor: "#000000",
         borderColor: "#e0e0e0",
-        titleFontSize: 20,
-        headingFontSize: 12,
-        bodyFontSize: 9,
+        titleFontSize: 18,
+        headingFontSize: 10,
+        bodyFontSize: 7,
         fontFamily: "helvetica",
         margin: 15,
         cardPadding: 6,
@@ -263,8 +263,8 @@ export default function Home() {
         cardPadding: isMobileDevice
           ? baseSettings.cardPadding * 1.3
           : baseSettings.cardPadding,
-        legendFontSize: isMobileDevice ? 16 : 12, // Larger legend font for mobile
-        legendValueFontSize: isMobileDevice ? 14 : 11, // Larger legend value font for mobile
+        legendFontSize: isMobileDevice ? 26 : 22, // Larger legend font for mobile
+        legendValueFontSize: isMobileDevice ? 22 : 18, // Larger legend value font for mobile
       };
 
       const pdf = new jsPDF({
@@ -366,35 +366,66 @@ export default function Home() {
           },
         ];
 
-        // For mobile: 3 per row, for desktop: 5 per row
-        const metricsPerRow = isMobileDevice ? 3 : 5;
+        // For mobile: 2 per row, for desktop: 3 per row (to show in 2 rows)
+        const metricsPerRow = isMobileDevice ? 2 : 3;
         const cardWidth =
           (pageWidth - 2 * margin - (metricsPerRow - 1) * 3) / metricsPerRow;
         const cardHeight = isMobileDevice ? 25 : 20;
-        const rowSpacing = isMobileDevice ? 5 : 0;
+        const rowSpacing = isMobileDevice ? 5 : 5; // Add spacing between rows
 
         metrics.forEach((metric, index) => {
           const row = Math.floor(index / metricsPerRow);
           const col = index % metricsPerRow;
-          const xPos = margin + col * (cardWidth + 3);
+          const itemsInRow = Math.min(
+            metricsPerRow,
+            metrics.length - row * metricsPerRow
+          );
+          // Center the row if it has fewer items than metricsPerRow
+          const rowOffset =
+            itemsInRow < metricsPerRow
+              ? ((metricsPerRow - itemsInRow) * (cardWidth + 3)) / 2
+              : 0;
+          const xPos = margin + col * (cardWidth + 3) + rowOffset;
           const yPosForCard = yPos + row * (cardHeight + rowSpacing);
 
           pdf.setDrawColor(borderRgb.r, borderRgb.g, borderRgb.b);
           pdf.setFillColor(255, 255, 255);
           pdf.roundedRect(xPos, yPosForCard, cardWidth, cardHeight, 2, 2, "FD");
-          pdf.setFontSize(settings.bodyFontSize - 1);
+
+          // Center the text both horizontally and vertically in the card
+          const cardCenterX = xPos + cardWidth / 2;
+          const cardCenterY = yPosForCard + cardHeight / 2;
+
+          // Calculate font sizes
+          const labelFontSize = settings.bodyFontSize + 4;
+          const valueFontSize = settings.headingFontSize + 5;
+
+          // Calculate spacing between label and value (in mm, approximately font size / 2.5)
+          const spacing = (labelFontSize + valueFontSize) / 5;
+
+          // Position label above center and value below center
+          const labelY = cardCenterY - spacing / 2;
+          const valueY = cardCenterY + spacing / 2;
+
+          // Increased font size for metric labels (e.g., "Total Visitors")
+          pdf.setFontSize(labelFontSize);
           pdf.setFont(settings.fontFamily, "normal");
           pdf.setTextColor(textRgb.r, textRgb.g, textRgb.b);
-          pdf.text(metric.label, xPos + settings.cardPadding, yPosForCard + 5);
-          pdf.setFontSize(settings.headingFontSize);
+          pdf.text(metric.label, cardCenterX, labelY, {
+            align: "center",
+          });
+
+          // Increased font size for metric values (e.g., "2,976")
+          pdf.setFontSize(valueFontSize);
           pdf.setFont(settings.fontFamily, "bold");
           pdf.setTextColor(primaryRgb.r, primaryRgb.g, primaryRgb.b);
           pdf.text(
             typeof metric.value === "number"
               ? metric.value.toLocaleString()
               : metric.value,
-            xPos + settings.cardPadding,
-            yPosForCard + 12
+            cardCenterX,
+            valueY,
+            { align: "center" }
           );
         });
         // Calculate total height based on number of rows
@@ -457,7 +488,9 @@ export default function Home() {
           settings.barChartColors,
           trafficPieChartWidth,
           settings.legendFontSize,
-          settings.legendValueFontSize
+          settings.legendValueFontSize,
+          1,
+          isMobileDevice
         );
         // Pie chart canvas dimensions:
         // pieChartSize = min(700, 400) = 400
@@ -527,7 +560,9 @@ export default function Home() {
           settings.barChartColors,
           settings.pieChartWidth,
           settings.legendFontSize,
-          settings.legendValueFontSize
+          settings.legendValueFontSize,
+          1,
+          isMobileDevice
         );
         // Pie chart canvas dimensions:
         // pieChartSize = min(700, 400) = 400
@@ -566,12 +601,14 @@ export default function Home() {
           settings.barChartColors,
           settings.pieChartWidth,
           settings.legendFontSize,
-          settings.legendValueFontSize
+          settings.legendValueFontSize,
+          2, // 2-column legend layout for operating systems
+          isMobileDevice
         );
-        // Pie chart canvas dimensions:
+        // Pie chart canvas dimensions - use same aspect ratio as other pie charts
         // pieChartSize = min(700, 400) = 400
         // chartWidth = 400 * pieChartWidth, chartHeight = 400
-        // Aspect ratio = pieChartWidth
+        // Aspect ratio = pieChartWidth (same as Device Breakdown)
         const osChartWidth = pageWidth - 2 * margin;
         const osChartHeight = osChartWidth / settings.pieChartWidth;
         pdf.addImage(
@@ -1242,14 +1279,14 @@ export default function Home() {
                 alt="Union Square House Logo"
                 width={120}
                 height={120}
-                className="object-contain w-12 h-12 sm:w-24 sm:h-24 lg:w-[120px] lg:h-[120px]"
+                className="object-contain w-18 h-18 sm:w-24 sm:h-24 lg:w-[120px] lg:h-[120px]"
                 priority
               />
               <div className="border-l-2 border-gray-300 pl-2 sm:pl-5">
                 <h1 className="text-base sm:text-xl lg:text-2xl font-bold text-black tracking-tight">
                   Performance Dashboard
                 </h1>
-                <p className="text-[10px] sm:text-sm text-gray-600 mt-0.5 font-medium">
+                <p className="text-xs text-gray-600 mt-0.5 font-medium">
                   Union Square House
                 </p>
               </div>
@@ -1277,9 +1314,6 @@ export default function Home() {
         <div className="mb-6 sm:mb-12 text-center relative z-10">
           <div className="inline-block px-5 sm:px-6 lg:px-8 py-3 sm:py-4 glass-card border border-white/50 rounded-2xl sm:rounded-3xl shadow-md sm:shadow-lg sm:hover:shadow-xl transition-shadow">
             <p className="text-sm sm:text-base text-gray-700 font-medium">
-              <span className="block sm:inline mb-1 sm:mb-0">
-                Reporting Period:
-              </span>{" "}
               <span className="font-bold text-gray-900 block sm:inline mt-1 sm:mt-0">
                 {format(parseISO(startDate), "MMM dd, yyyy")} –{" "}
                 {format(parseISO(endDate), "MMM dd, yyyy")}

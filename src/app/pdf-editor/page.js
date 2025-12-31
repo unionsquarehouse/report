@@ -23,11 +23,11 @@ const reportData = {
     leadsToBitrix: 22,
   },
   topPages: [
-    { name: "Homepage", visitors: 1180 },
-    { name: "Team Page", visitors: 219 },
-    { name: "Contact Page", visitors: 188 },
-    { name: "Blog Page", visitors: 180 },
-    { name: "Careers Page", visitors: 146 },
+    { name: "Home", visitors: 1180 },
+    { name: "Team", visitors: 219 },
+    { name: "Contact", visitors: 188 },
+    { name: "Blog", visitors: 180 },
+    { name: "Careers", visitors: 146 },
   ],
   trafficSources: [
     { name: "Google Search", visitors: 654 },
@@ -130,6 +130,8 @@ export default function PDFEditor() {
     ],
     pieChartSize: 45,
     pieChartWidth: 2.8,
+    legendFontSize: 22,
+    legendValueFontSize: 18,
   });
 
   // Generate chart images when settings change
@@ -244,6 +246,8 @@ export default function PDFEditor() {
       ],
       pieChartSize: 45,
       pieChartWidth: 2.8,
+      legendFontSize: 22,
+      legendValueFontSize: 18,
     };
     setSettings(defaultSettings);
     localStorage.setItem("pdfSettings", JSON.stringify(defaultSettings));
@@ -588,6 +592,44 @@ export default function PDFEditor() {
                       handleSettingChange(
                         "pieChartWidth",
                         parseFloat(e.target.value)
+                      )
+                    }
+                    className="w-full"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Legend Font Size: {settings.legendFontSize}pt
+                  </label>
+                  <input
+                    type="range"
+                    min="10"
+                    max="30"
+                    value={settings.legendFontSize}
+                    onChange={(e) =>
+                      handleSettingChange(
+                        "legendFontSize",
+                        parseInt(e.target.value)
+                      )
+                    }
+                    className="w-full"
+                  />
+                </div>
+
+                <div className="mt-6">
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Legend Value Font Size: {settings.legendValueFontSize}pt
+                  </label>
+                  <input
+                    type="range"
+                    min="8"
+                    max="24"
+                    value={settings.legendValueFontSize}
+                    onChange={(e) =>
+                      handleSettingChange(
+                        "legendValueFontSize",
+                        parseInt(e.target.value)
                       )
                     }
                     className="w-full"

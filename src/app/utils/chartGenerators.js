@@ -141,11 +141,16 @@ export const generatePieChartImage = (
   colors = COLORS,
   pieChartWidth = 2.8,
   legendFontSize = 12,
-  legendValueFontSize = 11
+  legendValueFontSize = 11,
+  legendColumns = 1,
+  isMobile = false
 ) => {
   const canvas = document.createElement("canvas");
   const pieChartSize = Math.min(width, height);
-  const chartWidth = pieChartSize * pieChartWidth;
+  // Increase width for 2-column legend layout, but keep same dimensions for mobile
+  const baseChartWidth = pieChartSize * pieChartWidth;
+  const chartWidth =
+    legendColumns === 2 && !isMobile ? baseChartWidth * 1.3 : baseChartWidth;
   const chartHeight = pieChartSize;
   canvas.width = chartWidth;
   canvas.height = chartHeight;
@@ -161,8 +166,15 @@ export const generatePieChartImage = (
   const pieRadius = pieChartSize * 0.4;
   const centerX = pieChartSize * 0.5;
   const centerY = pieChartSize / 2;
-  const legendX = pieChartSize * 1.05;
+
+  // Calculate legend positioning based on number of columns
+  const itemsPerColumn = Math.ceil(data.length / legendColumns);
+  const legendColumnWidth =
+    legendColumns === 2 ? pieChartSize * 0.45 : pieChartSize * 0.5;
+  const legendStartX = pieChartSize * 1.05;
   const legendStartY = pieChartSize * 0.15;
+  // Increase spacing for mobile, keep same for desktop
+  const legendVerticalSpacing = isMobile ? 60 : 52;
 
   const total = data.reduce((sum, item) => sum + item[valueKey], 0);
   let currentAngle = -Math.PI / 2;
@@ -199,7 +211,11 @@ export const generatePieChartImage = (
 
     const slicePercentage = ((item[valueKey] / total) * 100).toFixed(1);
 
-    const legendY = legendStartY + index * 38;
+    // Calculate column and row position for multi-column layout
+    const column = legendColumns === 2 ? Math.floor(index / itemsPerColumn) : 0;
+    const row = legendColumns === 2 ? index % itemsPerColumn : index;
+    const legendX = legendStartX + column * legendColumnWidth;
+    const legendY = legendStartY + row * legendVerticalSpacing;
     const legendBoxSize = 14;
 
     ctx.fillStyle = colors[index % colors.length];
@@ -223,7 +239,7 @@ export const generatePieChartImage = (
     ctx.textAlign = "left";
     ctx.textBaseline = "top";
 
-    const maxNameLength = 20;
+    const maxNameLength = legendColumns === 2 ? 15 : 20;
     const displayName =
       item.name.length > maxNameLength
         ? item.name.substring(0, maxNameLength - 3) + "..."
@@ -236,7 +252,7 @@ export const generatePieChartImage = (
     ctx.fillText(
       `${item[valueKey].toLocaleString()} (${slicePercentage}%)`,
       legendX + legendBoxSize + 8,
-      legendY + 8
+      legendY + legendFontSize + 1 // Increased spacing: now uses legendFontSize + 4 instead of fixed 8
     );
 
     currentAngle += sliceAngle;
@@ -244,4 +260,3 @@ export const generatePieChartImage = (
 
   return canvas.toDataURL("image/png");
 };
-
