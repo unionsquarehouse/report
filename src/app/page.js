@@ -204,8 +204,12 @@ export default function Home() {
           ? JSON.parse(localStorage.getItem("pdfSettings") || "null")
           : null;
 
-      // Use saved settings or defaults
-      const settings = savedSettings || {
+      // Detect if mobile device
+      const isMobileDevice =
+        typeof window !== "undefined" && window.innerWidth < 768;
+
+      // Use saved settings or defaults, with larger fonts for mobile
+      const baseSettings = savedSettings || {
         primaryColor: "#000000",
         backgroundColor: "#f5f5f5",
         textColor: "#000000",
@@ -239,6 +243,26 @@ export default function Home() {
         ],
         pieChartSize: 45,
         pieChartWidth: 2.8,
+      };
+
+      // Increase font sizes for mobile
+      const settings = {
+        ...baseSettings,
+        titleFontSize: isMobileDevice
+          ? baseSettings.titleFontSize * 1.4
+          : baseSettings.titleFontSize,
+        headingFontSize: isMobileDevice
+          ? baseSettings.headingFontSize * 1.3
+          : baseSettings.headingFontSize,
+        bodyFontSize: isMobileDevice
+          ? baseSettings.bodyFontSize * 1.4
+          : baseSettings.bodyFontSize,
+        margin: isMobileDevice
+          ? baseSettings.margin * 1.2
+          : baseSettings.margin,
+        cardPadding: isMobileDevice
+          ? baseSettings.cardPadding * 1.3
+          : baseSettings.cardPadding,
       };
 
       const pdf = new jsPDF({
@@ -1165,7 +1189,7 @@ export default function Home() {
 
   return (
     <div
-      className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50/30 to-purple-50/20 relative overflow-hidden"
+      className="min-h-screen bg-linear-to-br from-slate-50 via-blue-50/30 to-purple-50/20 relative overflow-hidden"
       style={{
         background:
           "linear-gradient(to bottom right, #f8fafc, rgba(239, 246, 255, 0.3), rgba(250, 245, 255, 0.2))",
@@ -1173,39 +1197,39 @@ export default function Home() {
     >
       {/* Liquid glass animated background elements */}
       <div className="fixed inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute -top-40 -right-40 w-96 h-96 bg-gradient-to-br from-blue-200/40 to-purple-200/30 rounded-full liquid-blob"></div>
+        <div className="absolute -top-40 -right-40 w-96 h-96 bg-linear-to-br from-blue-200/40 to-purple-200/30 rounded-full liquid-blob"></div>
         <div
-          className="absolute -bottom-40 -left-40 w-96 h-96 bg-gradient-to-br from-purple-200/40 to-pink-200/30 rounded-full liquid-blob"
+          className="absolute -bottom-40 -left-40 w-96 h-96 bg-linear-to-br from-purple-200/40 to-pink-200/30 rounded-full liquid-blob"
           style={{ animationDelay: "5s" }}
         ></div>
         <div
-          className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-gradient-to-br from-cyan-200/20 to-blue-200/20 rounded-full liquid-blob"
+          className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-linear-to-br from-cyan-200/20 to-blue-200/20 rounded-full liquid-blob"
           style={{ animationDelay: "10s" }}
         ></div>
         <div
-          className="absolute top-1/4 right-1/4 w-80 h-80 bg-gradient-to-br from-indigo-200/30 to-purple-200/20 rounded-full liquid-blob"
+          className="absolute top-1/4 right-1/4 w-80 h-80 bg-linear-to-br from-indigo-200/30 to-purple-200/20 rounded-full liquid-blob"
           style={{ animationDelay: "15s" }}
         ></div>
       </div>
 
       {/* Header with Filters and Export */}
-      <div className="glass sticky top-0 z-50 border-b border-white/30 shadow-2xl backdrop-blur-xl">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-10 ">
-          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 sm:gap-6">
-            <div className="flex items-center gap-3 sm:gap-5">
+      <div className="glass sticky top-0 z-50 border-b border-white/30 shadow-lg sm:shadow-2xl backdrop-blur-xl">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-10 py-3 sm:py-4 lg:py-6">
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 sm:gap-6">
+            <div className="flex items-center gap-2 sm:gap-5">
               <Image
                 src="/ush-logo.jpeg"
                 alt="Union Square House Logo"
                 width={120}
                 height={120}
-                className="object-contain w-16 h-16 sm:w-24 sm:h-24 lg:w-[120px] lg:h-[120px]"
+                className="object-contain w-12 h-12 sm:w-24 sm:h-24 lg:w-[120px] lg:h-[120px]"
                 priority
               />
-              <div className="border-l-2 border-gray-300 pl-3 sm:pl-5">
-                <h1 className="text-lg sm:text-xl lg:text-2xl font-bold text-black tracking-tight">
+              <div className="border-l-2 border-gray-300 pl-2 sm:pl-5">
+                <h1 className="text-base sm:text-xl lg:text-2xl font-bold text-black tracking-tight">
                   Performance Dashboard
                 </h1>
-                <p className="text-xs sm:text-sm text-gray-600 mt-0.5 font-medium">
+                <p className="text-[10px] sm:text-sm text-gray-600 mt-0.5 font-medium">
                   Union Square House
                 </p>
               </div>
@@ -1230,11 +1254,13 @@ export default function Home() {
         className="max-w-7xl mx-auto px-5 sm:px-6 lg:px-10 py-6 sm:py-8 lg:py-10 pb-24 md:pb-10 relative z-10"
       >
         {/* Report Period */}
-        <div className="mb-10 sm:mb-12 text-center relative z-10">
-          <div className="inline-block px-6 sm:px-6 lg:px-8 py-4 sm:py-4 glass-card border border-white/50 rounded-3xl sm:rounded-3xl shadow-lg sm:hover:shadow-xl transition-shadow">
-            <p className="text-base sm:text-base text-gray-700 font-medium">
-              Reporting Period:{" "}
-              <span className="font-bold bg-gradient-to-r from-gray-900 to-gray-700 bg-clip-text text-transparent block sm:inline">
+        <div className="mb-6 sm:mb-12 text-center relative z-10">
+          <div className="inline-block px-5 sm:px-6 lg:px-8 py-3 sm:py-4 glass-card border border-white/50 rounded-2xl sm:rounded-3xl shadow-md sm:shadow-lg sm:hover:shadow-xl transition-shadow">
+            <p className="text-sm sm:text-base text-gray-700 font-medium">
+              <span className="block sm:inline mb-1 sm:mb-0">
+                Reporting Period:
+              </span>{" "}
+              <span className="font-bold text-gray-900 block sm:inline mt-1 sm:mt-0">
                 {format(parseISO(startDate), "MMM dd, yyyy")} –{" "}
                 {format(parseISO(endDate), "MMM dd, yyyy")}
               </span>
@@ -1243,64 +1269,69 @@ export default function Home() {
         </div>
 
         {/* Key Metrics Cards */}
-        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3 sm:gap-4 lg:gap-6 mb-10 sm:mb-12 relative z-10">
-          {[
-            {
-              label: "Total Visitors",
-              value: analyticsData.metrics.totalVisitors,
-              gradient: "from-blue-500/10 to-cyan-500/10",
-              borderColor: "border-blue-200/50",
-            },
-            {
-              label: "Total Page Views",
-              value: analyticsData.metrics.totalPageViews,
-              gradient: "from-purple-500/10 to-pink-500/10",
-              borderColor: "border-purple-200/50",
-            },
-            {
-              label: "Resumes Received",
-              value: analyticsData.metrics.resumesReceived,
-              gradient: "from-green-500/10 to-emerald-500/10",
-              borderColor: "border-green-200/50",
-            },
-            {
-              label: "Leads to Bitrix",
-              value: analyticsData.metrics.leadsToBitrix,
-              gradient: "from-teal-500/10 to-cyan-500/10",
-              borderColor: "border-teal-200/50",
-            },
-            {
-              label: "Conversion Rate",
-              value: `${analyticsData.metrics.conversionRate}%`,
-              gradient: "from-orange-500/10 to-amber-500/10",
-              borderColor: "border-orange-200/50",
-            },
-          ].map((metric, index) => (
-            <div
-              key={index}
-              className={`glass-card border ${metric.borderColor} p-3 sm:p-5 lg:p-7 rounded-2xl sm:rounded-3xl transition-all duration-300 active:scale-95 sm:active:scale-100 sm:hover:shadow-2xl sm:hover:scale-[1.02] sm:hover:border-white/60 bg-gradient-to-br ${metric.gradient} touch-manipulation`}
-            >
-              <h3 className="text-[10px] sm:text-xs font-semibold text-gray-600 mb-2 sm:mb-4 uppercase tracking-wider">
-                {metric.label}
-              </h3>
-              <p className="text-2xl sm:text-3xl lg:text-5xl font-bold leading-tight bg-gradient-to-br from-gray-900 to-gray-700 bg-clip-text text-transparent">
-                {typeof metric.value === "number"
-                  ? metric.value.toLocaleString()
-                  : metric.value}
-              </p>
-            </div>
-          ))}
+        <div className="mb-8 sm:mb-12 relative z-10">
+          <h2 className="text-lg sm:text-xl font-bold text-gray-800 mb-4 sm:mb-6 px-1">
+            Key Metrics
+          </h2>
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3 sm:gap-4 lg:gap-6">
+            {[
+              {
+                label: "Total Visitors",
+                value: analyticsData.metrics.totalVisitors,
+                gradient: "from-blue-500/10 to-cyan-500/10",
+                borderColor: "border-blue-200/50",
+              },
+              {
+                label: "Total Page Views",
+                value: analyticsData.metrics.totalPageViews,
+                gradient: "from-purple-500/10 to-pink-500/10",
+                borderColor: "border-purple-200/50",
+              },
+              {
+                label: "Resumes Received",
+                value: analyticsData.metrics.resumesReceived,
+                gradient: "from-green-500/10 to-emerald-500/10",
+                borderColor: "border-green-200/50",
+              },
+              {
+                label: "Leads to Bitrix",
+                value: analyticsData.metrics.leadsToBitrix,
+                gradient: "from-teal-500/10 to-cyan-500/10",
+                borderColor: "border-teal-200/50",
+              },
+              {
+                label: "Conversion Rate",
+                value: `${analyticsData.metrics.conversionRate}%`,
+                gradient: "from-orange-500/10 to-amber-500/10",
+                borderColor: "border-orange-200/50",
+              },
+            ].map((metric, index) => (
+              <div
+                key={index}
+                className={`glass-card border ${metric.borderColor} p-4 sm:p-5 lg:p-7 rounded-2xl sm:rounded-3xl transition-all duration-300 active:scale-95 sm:active:scale-100 sm:hover:shadow-2xl sm:hover:scale-[1.02] sm:hover:border-white/60 bg-linear-to-br ${metric.gradient} touch-manipulation`}
+              >
+                <h3 className="text-xs sm:text-xs font-semibold text-gray-600 mb-3 sm:mb-4 uppercase tracking-wider">
+                  {metric.label}
+                </h3>
+                <p className="text-3xl sm:text-3xl lg:text-5xl font-bold leading-tight bg-linear-to-br from-gray-900 to-gray-700 bg-clip-text text-transparent">
+                  {typeof metric.value === "number"
+                    ? metric.value.toLocaleString()
+                    : metric.value}
+                </p>
+              </div>
+            ))}
+          </div>
         </div>
 
         {/* Section 1: Top Performing Pages */}
-        <div className="mb-10 sm:mb-10 relative z-10">
-          <div className="mb-6 sm:mb-7 pb-4 sm:pb-5 border-b border-gray-200/50">
-            <h2 className="text-xl sm:text-xl font-bold text-black uppercase tracking-wider flex items-center gap-3 sm:gap-3">
-              <span className="w-1.5 h-8 sm:h-8 bg-gradient-to-b from-blue-500 to-cyan-500 rounded-full"></span>
+        <div className="mb-8 sm:mb-10 relative z-10">
+          <div className="mb-4 sm:mb-7 pb-3 sm:pb-5 border-b-2 sm:border-b border-gray-300 sm:border-gray-200/50">
+            <h2 className="text-xl sm:text-xl font-bold text-black uppercase tracking-wide sm:tracking-wider flex items-center gap-2 sm:gap-3">
+              <span className="w-1 h-6 sm:w-1.5 sm:h-8 bg-linear-to-b from-blue-500 to-cyan-500 rounded-full"></span>
               Top Performing Pages
             </h2>
           </div>
-          <div className="glass-card border border-white/40 rounded-3xl sm:rounded-3xl p-5 sm:p-4 lg:p-6 bg-gradient-to-br from-blue-50/50 to-cyan-50/30">
+          <div className="glass-card border border-white/40 rounded-2xl sm:rounded-3xl p-4 sm:p-4 lg:p-6 bg-linear-to-br from-blue-50/50 to-cyan-50/30 shadow-md sm:shadow-lg">
             <ResponsiveContainer width="100%" height={300}>
               <BarChart
                 data={analyticsData.topPages}
@@ -1389,11 +1420,11 @@ export default function Home() {
           <div>
             <div className="mb-6 sm:mb-7 pb-4 sm:pb-5 border-b border-gray-200/50">
               <h2 className="text-xl sm:text-xl font-bold text-black uppercase tracking-wider flex items-center gap-3 sm:gap-3">
-                <span className="w-1.5 h-8 sm:h-8 bg-gradient-to-b from-purple-500 to-pink-500 rounded-full"></span>
+                <span className="w-1.5 h-8 sm:h-8 bg-linear-to-b from-purple-500 to-pink-500 rounded-full"></span>
                 Traffic Sources
               </h2>
             </div>
-            <div className="glass-card border border-white/40 rounded-3xl sm:rounded-3xl p-5 sm:p-4 lg:p-6 bg-gradient-to-br from-purple-50/50 to-pink-50/30">
+            <div className="glass-card border border-white/40 rounded-3xl sm:rounded-3xl p-5 sm:p-4 lg:p-6 bg-linear-to-br from-purple-50/50 to-pink-50/30">
               <ResponsiveContainer width="100%" height={isMobile ? 250 : 300}>
                 <PieChart>
                   <Pie
@@ -1491,11 +1522,11 @@ export default function Home() {
           <div>
             <div className="mb-6 sm:mb-7 pb-4 sm:pb-5 border-b border-gray-200/50">
               <h2 className="text-xl sm:text-xl font-bold text-black uppercase tracking-wider flex items-center gap-3 sm:gap-3">
-                <span className="w-1.5 h-8 sm:h-8 bg-gradient-to-b from-green-500 to-emerald-500 rounded-full"></span>
+                <span className="w-1.5 h-8 sm:h-8 bg-linear-to-b from-green-500 to-emerald-500 rounded-full"></span>
                 Top Countries
               </h2>
             </div>
-            <div className="glass-card border border-white/40 rounded-3xl sm:rounded-3xl p-5 sm:p-4 lg:p-6 bg-gradient-to-br from-green-50/50 to-emerald-50/30">
+            <div className="glass-card border border-white/40 rounded-3xl sm:rounded-3xl p-5 sm:p-4 lg:p-6 bg-linear-to-br from-green-50/50 to-emerald-50/30">
               <ResponsiveContainer width="100%" height={300}>
                 <BarChart
                   data={analyticsData.countries}
@@ -1653,11 +1684,11 @@ export default function Home() {
           <div>
             <div className="mb-6 sm:mb-7 pb-4 sm:pb-5 border-b border-gray-200/50">
               <h2 className="text-xl sm:text-xl font-bold text-black uppercase tracking-wider flex items-center gap-3 sm:gap-3">
-                <span className="w-1.5 h-8 sm:h-8 bg-gradient-to-b from-indigo-500 to-blue-500 rounded-full"></span>
+                <span className="w-1.5 h-8 sm:h-8 bg-linear-to-b from-indigo-500 to-blue-500 rounded-full"></span>
                 Device Breakdown
               </h2>
             </div>
-            <div className="glass-card border border-white/40 rounded-3xl sm:rounded-3xl p-5 sm:p-4 lg:p-6 bg-gradient-to-br from-indigo-50/50 to-blue-50/30">
+            <div className="glass-card border border-white/40 rounded-3xl sm:rounded-3xl p-5 sm:p-4 lg:p-6 bg-linear-to-br from-indigo-50/50 to-blue-50/30">
               <ResponsiveContainer width="100%" height={isMobile ? 250 : 280}>
                 <PieChart>
                   <Pie
@@ -1776,11 +1807,11 @@ export default function Home() {
           <div>
             <div className="mb-6 sm:mb-7 pb-4 sm:pb-5 border-b border-gray-200/50">
               <h2 className="text-xl sm:text-xl font-bold text-black uppercase tracking-wider flex items-center gap-3 sm:gap-3">
-                <span className="w-1.5 h-8 sm:h-8 bg-gradient-to-b from-orange-500 to-amber-500 rounded-full"></span>
+                <span className="w-1.5 h-8 sm:h-8 bg-linear-to-b from-orange-500 to-amber-500 rounded-full"></span>
                 Operating Systems
               </h2>
             </div>
-            <div className="glass-card border border-white/40 rounded-3xl sm:rounded-3xl p-5 sm:p-4 lg:p-6 bg-gradient-to-br from-orange-50/50 to-amber-50/30">
+            <div className="glass-card border border-white/40 rounded-3xl sm:rounded-3xl p-5 sm:p-4 lg:p-6 bg-linear-to-br from-orange-50/50 to-amber-50/30">
               <ResponsiveContainer width="100%" height={isMobile ? 300 : 400}>
                 <BarChart
                   data={analyticsData.operatingSystems}
@@ -1870,7 +1901,7 @@ export default function Home() {
         <div className="mb-10 sm:mb-10 relative z-10">
           <div className="mb-6 sm:mb-7 pb-4 sm:pb-5 border-b border-gray-200/50">
             <h2 className="text-xl sm:text-xl font-bold text-black uppercase tracking-wider flex items-center gap-3 sm:gap-3">
-              <span className="w-1.5 h-8 sm:h-8 bg-gradient-to-b from-rose-500 to-pink-500 rounded-full"></span>
+              <span className="w-1.5 h-8 sm:h-8 bg-linear-to-b from-rose-500 to-pink-500 rounded-full"></span>
               <span className="wrap-break-word">
                 Content Highlights: The "Meydan" Factor
               </span>
@@ -1893,7 +1924,7 @@ export default function Home() {
               <span className="text-sm sm:text-xs font-semibold text-gray-600 uppercase tracking-wide">
                 Lifetime Views:
               </span>
-              <span className="text-3xl sm:text-3xl font-bold bg-gradient-to-r from-gray-900 to-gray-700 bg-clip-text text-transparent">
+              <span className="text-3xl sm:text-3xl font-bold bg-linear-to-r from-gray-900 to-gray-700 bg-clip-text text-transparent">
                 {analyticsData.blogPost.lifetimeViews.toLocaleString()}
               </span>
             </div>

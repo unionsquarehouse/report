@@ -75,19 +75,35 @@ body {
 
   /* Mobile app-like card styling */
   .glass-card {
-    border-radius: 1.25rem;
-    box-shadow: 0 4px 20px 0 rgba(0, 0, 0, 0.08);
+    border-radius: 1rem;
+    box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.08);
   }
 
   /* Better spacing for mobile */
   body {
     -webkit-tap-highlight-color: transparent;
+    font-size: 16px; /* Prevent zoom on input focus */
   }
 
   /* Smooth scrolling for mobile */
   html {
     scroll-behavior: smooth;
     -webkit-overflow-scrolling: touch;
+  }
+
+  /* Better section spacing on mobile */
+  section, .section {
+    margin-bottom: 1.5rem;
+  }
+
+  /* Improved readability */
+  h1, h2, h3 {
+    line-height: 1.3;
+  }
+
+  /* Better visual hierarchy */
+  .glass-card {
+    border-width: 1.5px;
   }
 }
 
